@@ -1,5 +1,5 @@
 /* ==========================================================================
-   STRIX by CORE829 — interazioni e motion design
+   CORE829 Cybersecurity — interazioni e motion design
    Nessuna dipendenza esterna. Rispetta prefers-reduced-motion.
    ========================================================================== */
 
@@ -341,74 +341,120 @@ function initConstellation() {
 }
 
 /* --------------------------------------------------------------------------
-   Demo della chat
+   Console di attacco (demo)
    -------------------------------------------------------------------------- */
-const CHATS = {
-  hotel: {
-    name: "Hotel Belvedere",
-    lead: "Contatto inviato alla reception · email",
-    steps: [
-      ["user", "Ciao! Avete una doppia libera dal 14 al 16 agosto? C'è il parcheggio?"],
-      ["bot", "Ciao! Le camere doppie partono da 120 € a notte con colazione inclusa, e il parcheggio privato è gratuito per gli ospiti. Per confermarti la disponibilità di quelle date ti metto in contatto con la reception: mi lasci la tua email?", ["camere.html", "servizi.html"]],
-      ["user", "mario.rossi@email.it"],
-      ["bot", "Perfetto, Mario. La reception ti scrive al più presto con la conferma. Buona giornata!"],
-    ],
-  },
-  ristorante: {
-    name: "Osteria del Porto",
-    lead: "Richiesta tavolo inviata · WhatsApp",
-    steps: [
-      ["user", "Avete piatti senza glutine? Siete aperti il lunedì?"],
-      ["bot", "Sì: nel menù trovi 8 piatti senza glutine segnalati, e la pasta può essere preparata senza glutine su richiesta. Il lunedì siamo chiusi; da martedì a domenica siamo aperti dalle 19:00 alle 23:30.", ["menu.pdf", "orari.html"]],
-      ["user", "Vorrei prenotare per 4 sabato sera"],
-      ["bot", "Volentieri! Lasciami un numero di telefono e lo staff ti conferma il tavolo per sabato."],
-    ],
-  },
-  medico: {
-    name: "Poliambulatorio San Luca",
-    lead: "Richiamata richiesta alla segreteria",
-    steps: [
-      ["user", "Quanto costa una visita cardiologica? Serve l'impegnativa?"],
-      ["bot", "La visita cardiologica con elettrocardiogramma costa 120 €. Essendo in regime privato non serve l'impegnativa. Non posso dare consigli medici, ma posso farti richiamare dalla segreteria per fissare l'appuntamento.", ["tariffe-2026.pdf"]],
-      ["user", "Sì, grazie: 333 123 4567"],
-      ["bot", "Fatto. La segreteria ti richiama in orario di apertura, dal lunedì al venerdì."],
-    ],
-  },
+/* Ogni passo: [ritardo ms, tipo, agente, testo, dettagli?]
+   tipo: "run" = in corso, "ok" = completato, "find" = vulnerabilità dimostrata */
+const CAMPAIGNS = {
   ecommerce: {
-    name: "Nordico Design",
-    lead: "Link inviato · domanda registrata nel resoconto",
+    target: "shop.esempio.it",
+    mode: "Campagna di test · black-box",
+    agents: 6,
     steps: [
-      ["user", "Quanto ci mette la spedizione in Sicilia? Posso fare il reso?"],
-      ["bot", "Spediamo in 24–48 ore lavorative in tutta Italia; per le isole servono fino a 72 ore. Hai 30 giorni per il reso gratuito direttamente dalla tua area clienti.", ["spedizioni.html", "resi.html"]],
-      ["user", "Il tavolo Fjord esiste anche in noce?"],
-      ["bot", "Sul sito il tavolo Fjord è disponibile solo in rovere e frassino. Vuoi che giri la domanda al team per una versione su misura?"],
+      [500, "run", "RECON", "mappatura della superficie di attacco"],
+      [1500, "ok", "RECON", "48 endpoint · 6 moduli · 1 API di pagamento"],
+      [900, "run", "INJ", "test parametri su /prodotti?cerca="],
+      [900, "run", "ACL", "accesso a /account/ordini/{id} con un altro utente"],
+      [1700, "find", "ACL", "Ordini di altri clienti visibili (IDOR)", { sev: "high", cvss: "8.1", poc: "GET /account/ordini/10431 → 200 OK · dati di un altro cliente" }],
+      [1100, "run", "LOGIC", "manipolazione del carrello in fase di conferma"],
+      [1800, "find", "LOGIC", "Prezzo del carrello modificabile dal browser", { sev: "crit", cvss: "9.1", poc: "POST /api/carrello/conferma · prezzo: 0.01 → ordine creato" }],
+      [900, "run", "XSS", "payload nelle recensioni dei prodotti"],
+      [1400, "find", "XSS", "XSS memorizzato nelle recensioni", { sev: "med", cvss: "5.4", poc: "<img onerror> eseguito nella pagina prodotto" }],
+      [1000, "ok", "REPORT", "3 vulnerabilità dimostrate · correzioni pronte"],
     ],
   },
-  commercialista: {
-    name: "Studio Ferri & Associati",
-    lead: "Prima consulenza richiesta · CRM",
+  saas: {
+    target: "app.esempio.io",
+    mode: "Campagna di test · autenticato",
+    agents: 7,
     steps: [
-      ["user", "Seguite anche le partite IVA in regime forfettario?"],
-      ["bot", "Sì, seguiamo i forfettari: dichiarazione dei redditi, F24 e consulenza durante l'anno. Il costo dipende dal numero di fatture emesse.", ["servizi.html", "listino.pdf"]],
-      ["user", "Posso avere un preventivo?"],
-      ["bot", "Certo! Ti propongo una prima consulenza di 20 minuti: mi lasci nome ed email così lo studio ti contatta?"],
+      [500, "run", "RECON", "lettura specifica OpenAPI e ruoli utente"],
+      [1400, "ok", "RECON", "112 endpoint · 3 ruoli · multi-tenant"],
+      [900, "run", "AUTH", "analisi dei token di sessione JWT"],
+      [1700, "find", "AUTH", "Token JWT accettato senza firma", { sev: "crit", cvss: "9.8", poc: 'alg: "none" · role: "admin" → accesso al pannello' }],
+      [1000, "run", "ACL", "accesso ai workspace di altri clienti"],
+      [1700, "find", "ACL", "Dati di un altro cliente leggibili", { sev: "high", cvss: "8.8", poc: "GET /api/v1/workspaces/2207/fatture → 200 OK" }],
+      [900, "run", "API", "assegnazione di campi protetti"],
+      [1400, "find", "API", "Un utente può cambiarsi il ruolo", { sev: "high", cvss: "8.1", poc: 'PATCH /api/v1/me { "ruolo": "owner" } → 200 OK' }],
+      [1000, "ok", "REPORT", "3 vulnerabilità dimostrate · correzioni pronte"],
+    ],
+  },
+  sanita: {
+    target: "prenota.esempio-clinica.it",
+    mode: "Campagna di test · black-box",
+    agents: 5,
+    steps: [
+      [500, "run", "RECON", "mappatura area pazienti e prenotazioni"],
+      [1400, "ok", "RECON", "31 endpoint · area riservata · download referti"],
+      [900, "run", "ACL", "download dei referti senza autenticazione"],
+      [1800, "find", "ACL", "Referti scaricabili senza login", { sev: "crit", cvss: "9.1", poc: "GET /referti/download?id=88213 → PDF di un paziente" }],
+      [1000, "run", "SESS", "durata e invalidazione delle sessioni"],
+      [1400, "find", "SESS", "La sessione resta valida dopo il logout", { sev: "med", cvss: "5.9", poc: "cookie riutilizzato dopo /logout → 200 OK" }],
+      [900, "run", "CONFIG", "header di sicurezza e servizi esposti"],
+      [1300, "find", "CONFIG", "Header di sicurezza mancanti", { sev: "low", cvss: "3.1", poc: "assenti Content-Security-Policy e HSTS" }],
+      [1000, "ok", "REPORT", "3 vulnerabilità dimostrate · correzioni pronte"],
+    ],
+  },
+  wordpress: {
+    target: "www.esempio-azienda.it",
+    mode: "Campagna di test · black-box",
+    agents: 5,
+    steps: [
+      [500, "run", "RECON", "rilevamento tema, plugin e versioni"],
+      [1400, "ok", "RECON", "WordPress · 14 plugin · 2 moduli di contatto"],
+      [900, "run", "VULN", "confronto versioni con vulnerabilità note"],
+      [1700, "find", "VULN", "Plugin obsoleto con vulnerabilità nota", { sev: "high", cvss: "8.8", poc: "upload di file non autorizzato · versione vulnerabile confermata" }],
+      [1000, "run", "AUTH", "protezioni del pannello /wp-admin"],
+      [1500, "find", "AUTH", "Login senza limite di tentativi", { sev: "med", cvss: "5.3", poc: "200 tentativi in 60 s · nessun blocco" }],
+      [900, "run", "INFO", "enumerazione utenti e file esposti"],
+      [1300, "find", "INFO", "Nomi utente amministratore esposti", { sev: "low", cvss: "3.7", poc: "GET /wp-json/wp/v2/users → elenco utenti" }],
+      [1000, "ok", "REPORT", "3 vulnerabilità dimostrate · correzioni pronte"],
+    ],
+  },
+  api: {
+    target: "api.esempio.com",
+    mode: "Campagna di test · autenticato",
+    agents: 6,
+    steps: [
+      [500, "run", "RECON", "import collezione Postman e schemi"],
+      [1400, "ok", "RECON", "76 endpoint · 2 versioni dell'API"],
+      [900, "run", "SSRF", "parametri che accettano URL esterni"],
+      [1800, "find", "SSRF", "Il server scarica URL interni (SSRF)", { sev: "high", cvss: "8.6", poc: "url=http://169.254.169.254/ → metadati cloud" }],
+      [1000, "run", "INJ", "iniezioni nei filtri di ricerca"],
+      [1700, "find", "INJ", "SQL injection nel filtro ordini", { sev: "crit", cvss: "9.8", poc: "?stato=' OR 1=1-- → tutti gli ordini restituiti" }],
+      [900, "run", "RATE", "limiti di frequenza su login e OTP"],
+      [1300, "find", "RATE", "Codice OTP indovinabile per tentativi", { sev: "high", cvss: "7.5", poc: "10.000 tentativi senza blocco su /v2/otp" }],
+      [1000, "ok", "REPORT", "3 vulnerabilità dimostrate · correzioni pronte"],
     ],
   },
 };
 
-class ChatDemo {
+const SEV_LABEL = { crit: "CRITICA", high: "ALTA", med: "MEDIA", low: "BASSA" };
+
+class ConsoleDemo {
   constructor(el) {
     this.el = el;
-    this.log = $("[data-chat-log]", el);
-    this.input = $("[data-chat-input]", el);
-    this.name = $("[data-chat-name]", el);
+    this.log = $("[data-console-log]", el);
+    this.target = $("[data-console-target]", el);
+    this.mode = $("[data-console-mode]", el);
+    this.agents = $("[data-console-agents]", el);
+    this.time = $("[data-console-time]", el);
+    this.sev = Object.fromEntries($$("[data-sev]", el).map((b) => [b.dataset.sev, b]));
     this.run = 0;
     this.visible = false;
     this.started = false;
+    this.t0 = 0;
     new IntersectionObserver(([e]) => {
       this.visible = e.isIntersecting;
-      if (this.visible && !this.started) { this.started = true; this.play(el.dataset.chat); }
+      if (this.visible && !this.started) { this.started = true; this.play(el.dataset.console); }
     }, { threshold: 0.25 }).observe(el);
+    setInterval(() => this.tick(), 250);
+  }
+
+  tick() {
+    if (!this.t0 || !this.visible) return;
+    const s = Math.floor((performance.now() - this.t0) / 1000);
+    this.time.textContent = [s / 3600, (s / 60) % 60, s % 60].map((n) => String(Math.floor(n)).padStart(2, "0")).join(":");
   }
 
   async wait(ms, id) {
@@ -420,97 +466,89 @@ class ChatDemo {
     if (id !== this.run) throw new Error("stop");
   }
 
-  bubble(cls) {
-    const b = document.createElement("div");
-    b.className = `msg ${cls}`;
-    this.log.appendChild(b);
-    while (this.log.children.length > 8) this.log.firstElementChild.remove();
-    return b;
+  reset(c) {
+    this.log.replaceChildren();
+    Object.values(this.sev).forEach((b) => { b.textContent = "0"; b.parentElement.classList.remove("is-hit"); });
+    this.target.textContent = c.target;
+    this.mode.textContent = c.mode;
+    this.agents.textContent = `${c.agents} agenti attivi`;
+    this.t0 = performance.now();
   }
 
-  async typeInput(text, id) {
-    this.input.classList.remove("is-placeholder");
-    this.input.textContent = "";
-    const per = clamp(1300 / text.length, 14, 42);
-    for (let i = 1; i <= text.length; i++) {
-      this.input.textContent = text.slice(0, i);
-      await this.wait(per, id);
-    }
-    await this.wait(260, id);
-    this.input.textContent = "Scrivi un messaggio…";
-    this.input.classList.add("is-placeholder");
+  line(kind, agent, text, stamp) {
+    const p = document.createElement("p");
+    p.className = `cl cl--${kind}`;
+    const t = document.createElement("span"); t.className = "cl__t"; t.textContent = stamp;
+    const a = document.createElement("span"); a.className = "cl__a"; a.textContent = agent;
+    const m = document.createElement("span"); m.className = "cl__m";
+    m.textContent = (kind === "run" ? "▸ " : kind === "ok" ? "✓ " : "■ ") + text;
+    p.append(t, a, m);
+    this.log.appendChild(p);
+    while (this.log.children.length > 14) this.log.firstElementChild.remove();
+    return p;
+  }
+
+  finding(d, title) {
+    const f = document.createElement("div");
+    f.className = `finding finding--${d.sev}`;
+    const top = document.createElement("div"); top.className = "finding__top";
+    const pill = document.createElement("span"); pill.className = `sev-pill sev-pill--${d.sev}`; pill.textContent = `${SEV_LABEL[d.sev]} · CVSS ${d.cvss}`;
+    const ok = document.createElement("span"); ok.className = "finding__ok"; ok.textContent = "✓ PoC verificata";
+    top.append(pill, ok);
+    const h = document.createElement("p"); h.className = "finding__title"; h.textContent = title;
+    const poc = document.createElement("p"); poc.className = "finding__pocline"; poc.textContent = d.poc;
+    f.append(top, h, poc);
+    this.log.appendChild(f);
+    const b = this.sev[d.sev];
+    b.textContent = String(Number(b.textContent) + 1);
+    b.parentElement.classList.remove("is-hit"); void b.offsetWidth; b.parentElement.classList.add("is-hit");
+  }
+
+  stamp() {
+    const s = Math.floor((performance.now() - this.t0) / 1000);
+    return `${String(Math.floor(s / 60)).padStart(2, "0")}:${String(s % 60).padStart(2, "0")}`;
   }
 
   async play(key) {
     const id = ++this.run;
-    const chat = CHATS[key] || CHATS.hotel;
-    this.el.dataset.chat = key;
-    this.name.textContent = chat.name;
-    this.log.replaceChildren();
-    this.input.textContent = "Scrivi un messaggio…";
-    this.input.classList.add("is-placeholder");
+    const c = CAMPAIGNS[key] || CAMPAIGNS.ecommerce;
+    this.el.dataset.console = key;
+    this.reset(c);
 
     if (REDUCED) {
-      for (const [who, text, src] of chat.steps) this.renderStatic(who, text, src);
+      for (const [, kind, agent, text, d] of c.steps) {
+        if (kind === "find") this.finding(d, text); else this.line(kind, agent, text, "--:--");
+      }
       return;
     }
-
     try {
       for (;;) {
-        await this.wait(700, id);
-        for (const [who, text, src] of chat.steps) {
-          if (who === "user") {
-            await this.typeInput(text, id);
-            this.bubble("msg--user").textContent = text;
-            await this.wait(450, id);
+        for (const [delay, kind, agent, text, d] of c.steps) {
+          await this.wait(delay, id);
+          if (kind === "find") {
+            this.line("find", agent, "vulnerabilità dimostrata", this.stamp());
+            await this.wait(350, id);
+            this.finding(d, text);
           } else {
-            const typing = this.bubble("msg--typing");
-            typing.innerHTML = "<i></i><i></i><i></i>";
-            await this.wait(950, id);
-            typing.remove();
-            const b = this.bubble("msg--bot");
-            const span = document.createElement("span");
-            b.appendChild(span);
-            const words = text.split(" ");
-            for (let i = 1; i <= words.length; i++) {
-              span.textContent = words.slice(0, i).join(" ");
-              await this.wait(38, id);
-            }
-            if (src) this.sources(b, src);
-            await this.wait(900, id);
+            this.line(kind, agent, text, this.stamp());
           }
         }
-        const lead = this.bubble("msg--lead");
-        lead.innerHTML = "<b>✓</b>";
-        lead.append(document.createTextNode(chat.lead));
-        await this.wait(5200, id);
+        this.agents.textContent = "campagna completata";
+        await this.wait(6000, id);
         this.log.style.transition = "opacity .5s";
         this.log.style.opacity = "0";
         await this.wait(550, id);
-        this.log.replaceChildren();
+        this.reset(c);
         this.log.style.opacity = "1";
       }
-    } catch { /* riproduzione interrotta (cambio settore) */ }
-  }
-
-  sources(b, src) {
-    const wrap = document.createElement("div");
-    wrap.className = "msg__src";
-    src.forEach((s) => { const t = document.createElement("span"); t.textContent = `Fonte · ${s}`; wrap.appendChild(t); });
-    b.appendChild(wrap);
-  }
-
-  renderStatic(who, text, src) {
-    const b = this.bubble(who === "user" ? "msg--user" : "msg--bot");
-    b.textContent = text;
-    if (src) this.sources(b, src);
+    } catch { /* riproduzione interrotta (cambio scenario) */ }
   }
 }
 
-function initChats() {
-  $$("[data-chat]").forEach((el) => {
-    const demo = new ChatDemo(el);
-    if (el.hasAttribute("data-sector-widget")) {
+function initConsoles() {
+  $$("[data-console]").forEach((el) => {
+    const demo = new ConsoleDemo(el);
+    if (el.closest(".sectors__demo")) {
       const tabs = $$("[data-sector-tabs] [role=tab]");
       tabs.forEach((tab, i) => {
         tab.addEventListener("click", () => {
@@ -531,38 +569,33 @@ function initChats() {
 }
 
 /* --------------------------------------------------------------------------
-   Terminale di installazione
+   Terminale del perimetro di test
    -------------------------------------------------------------------------- */
 const TERM = {
-  script: {
-    hint: "Incolla prima di </body>",
-    out: ["dominio verificato: tuosito.it", "widget caricato in 38 KB", "Strix è online"],
+  esterno: {
+    hint: "Perimetro del test · dall'esterno",
+    out: ["autorizzazione firmata", "dominio verificato (record DNS)", "6 agenti avviati nella finestra concordata"],
   },
-  wordpress: {
-    hint: "Dal pannello di WordPress",
-    out: ["plugin attivato", "codice di attivazione verificato", "Strix è online"],
+  login: {
+    hint: "Perimetro del test · con login",
+    out: ["autorizzazione firmata", "utenti di test ricevuti", "7 agenti avviati su 2 ruoli"],
   },
-  link: {
-    hint: "Per i siti che non si possono modificare",
-    out: ["pagina chat pronta", "nessuna modifica al tuo sito", "Strix è online"],
+  codice: {
+    hint: "Perimetro del test · codice sorgente",
+    out: ["accesso in sola lettura al repository", "analisi del codice + test sull'app in staging", "test collegati alle pull request"],
   },
 };
 
 function highlight(code, text) {
   code.replaceChildren();
-  const re = /(<\/?script)|(\s[a-z-]+=)|("[^"]*")|(>)/g;
-  let last = 0, m;
-  const add = (str, cls) => {
-    if (!str) return;
-    if (!cls) { code.append(document.createTextNode(str)); return; }
-    const s = document.createElement("span"); s.className = cls; s.textContent = str; code.append(s);
-  };
-  while ((m = re.exec(text))) {
-    add(text.slice(last, m.index));
-    add(m[0], m[1] || m[4] ? "t-tag" : m[2] ? "t-attr" : "t-str");
-    last = re.lastIndex;
-  }
-  add(text.slice(last));
+  text.split("\n").forEach((row, i) => {
+    if (i) code.append(document.createTextNode("\n"));
+    const m = row.match(/^(\s*[\w-]+:)(.*)$/);
+    if (!m) { code.append(document.createTextNode(row)); return; }
+    const k = document.createElement("span"); k.className = "t-tag"; k.textContent = m[1];
+    const v = document.createElement("span"); v.className = "t-str"; v.textContent = m[2];
+    code.append(k, v);
+  });
 }
 
 function initTerminal() {
@@ -571,9 +604,8 @@ function initTerminal() {
   const code = $("[data-term-code]", term);
   const hint = $("[data-term-hint]", term);
   const out = $("[data-term-out]", term);
-  const copy = $("[data-term-copy]", term);
   const tabs = $$("[role=tab]", term);
-  let current = "script", run = 0, visible = false;
+  let current = "esterno", run = 0, visible = false;
   const src = (k) => $(`[data-term-src="${k}"]`, term).dataset.text.trim();
 
   async function play(key) {
@@ -588,7 +620,7 @@ function initTerminal() {
     for (let i = 1; i <= text.length; i++) {
       if (id !== run) return;
       code.textContent = text.slice(0, i);
-      await sleep(text[i - 1] === "\n" ? 180 : 22);
+      await sleep(text[i - 1] === "\n" ? 160 : 18);
     }
     highlight(code, text);
     for (const l of cfg.out) {
@@ -608,35 +640,9 @@ function initTerminal() {
     tabs.forEach((x) => x.setAttribute("aria-selected", String(x === t)));
     play(t.dataset.tab);
   }));
-  copy.addEventListener("click", async () => {
-    try {
-      await navigator.clipboard.writeText(src(current));
-      copy.textContent = "Copiato";
-      copy.classList.add("is-done");
-    } catch {
-      copy.textContent = "Copia manuale";
-    }
-    setTimeout(() => { copy.textContent = "Copia"; copy.classList.remove("is-done"); }, 1800);
-  });
   new IntersectionObserver(([e]) => {
     if (e.isIntersecting && !visible) { visible = true; play(current); }
   }, { threshold: 0.35 }).observe(term);
-}
-
-/* Lingue che si alternano */
-function initLangCycle() {
-  const el = $("[data-lang-cycle]");
-  if (!el || REDUCED) return;
-  const words = ["Ciao", "Hello", "Hallo", "Bonjour", "Hola"];
-  let i = 0;
-  setInterval(async () => {
-    if (document.hidden) return;
-    const w = el.textContent;
-    for (let k = w.length; k >= 0; k--) { el.textContent = w.slice(0, k); await sleep(45); }
-    i = (i + 1) % words.length;
-    const n = words[i];
-    for (let k = 1; k <= n.length; k++) { el.textContent = n.slice(0, k); await sleep(70); }
-  }, 2600);
 }
 
 /* Linea di avanzamento dei passaggi */
@@ -688,11 +694,11 @@ function initBilling() {
 
 /* I pulsanti "Richiedi …" preselezionano il piano nel modulo */
 function initPlanPick() {
-  const plan = $("#f-piano");
-  const sector = $("#f-settore");
+  const plan = $("#f-servizio");
+  const type = $("#f-tipo");
   $$("[data-plan-pick]").forEach((a) => a.addEventListener("click", () => {
     if (plan) plan.value = a.dataset.planPick;
-    if (sector && a.dataset.sectorPick) sector.value = a.dataset.sectorPick;
+    if (type && a.dataset.typePick) type.value = a.dataset.typePick;
     setTimeout(() => $("#f-nome")?.focus({ preventScroll: true }), 700);
   }));
 }
@@ -725,14 +731,20 @@ function initForm() {
     azienda: (v) => (v.trim().length < 2 ? "Inserisci il nome dell'azienda." : ""),
     email: (v) => (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()) ? "" : "Inserisci un indirizzo email valido."),
     telefono: (v) => (v && !/^[\d\s+().\-/]+$/.test(v) ? "Il numero può contenere solo cifre, spazi e +." : ""),
-    sito: (v) => (/^(https?:\/\/)?[\w.-]+\.[a-z]{2,}([/?#].*)?$/i.test(v.trim()) ? "" : "Inserisci l'indirizzo del sito, es. www.tuosito.it"),
-    settore: (v) => (v ? "" : "Seleziona il tuo settore."),
+    target: (v) => (/^(https?:\/\/)?[\w.-]+\.[a-z]{2,}(:\d+)?([/?#].*)?$/i.test(v.trim()) ? "" : "Inserisci l'indirizzo da testare, es. www.tuosito.it"),
+    tipo: (v) => (v ? "" : "Seleziona il tipo di sistema."),
   };
 
+  const CHECKS = {
+    autorizzazione: "Possiamo testare solo sistemi di cui sei titolare o per cui hai l'autorizzazione del titolare.",
+    privacy: "Per inviare la richiesta serve il consenso all'informativa.",
+  };
+  const FIELDS = [...Object.keys(RULES), ...Object.keys(CHECKS)];
+
   const validateField = (name) => {
-    if (name === "privacy") {
-      const msg = form.elements.privacy.checked ? "" : "Per inviare la richiesta serve il consenso all'informativa.";
-      setError("privacy", msg);
+    if (CHECKS[name]) {
+      const msg = form.elements[name].checked ? "" : CHECKS[name];
+      setError(name, msg);
       return !msg;
     }
     const rule = RULES[name];
@@ -742,7 +754,7 @@ function initForm() {
     return !msg;
   };
 
-  [...Object.keys(RULES), "privacy"].forEach((name) => {
+  FIELDS.forEach((name) => {
     const el = form.elements[name];
     el?.addEventListener("blur", () => { if (el.value || el.closest(".field").classList.contains("is-invalid")) validateField(name); });
     el?.addEventListener("change", () => { if (el.closest(".field").classList.contains("is-invalid")) validateField(name); });
@@ -752,7 +764,7 @@ function initForm() {
     e.preventDefault();
     status.textContent = "";
     status.classList.remove("is-error");
-    const ok = [...Object.keys(RULES), "privacy"].map(validateField).every(Boolean);
+    const ok = FIELDS.map(validateField).every(Boolean);
     if (!ok) {
       status.textContent = "Controlla i campi evidenziati.";
       status.classList.add("is-error");
@@ -763,8 +775,8 @@ function initForm() {
     const f = form.elements;
     const payload = {
       nome: f.nome.value, azienda: f.azienda.value, email: f.email.value, telefono: f.telefono.value,
-      sito: f.sito.value, settore: f.settore.value, piano: f.piano.value, messaggio: f.messaggio.value,
-      privacy: f.privacy.checked, fax: f.fax.value, elapsed_ms: Math.round(performance.now() - T0),
+      target: f.target.value, tipo: f.tipo.value, servizio: f.servizio.value, messaggio: f.messaggio.value,
+      autorizzazione: f.autorizzazione.checked, privacy: f.privacy.checked, fax: f.fax.value, elapsed_ms: Math.round(performance.now() - T0),
     };
 
     submit.classList.add("is-loading");
@@ -807,9 +819,8 @@ initReveal();
 initClock();
 initPointerFx();
 initConstellation();
-initChats();
+initConsoles();
 initTerminal();
-initLangCycle();
 initSteps();
 initBilling();
 initPlanPick();

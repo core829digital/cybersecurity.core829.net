@@ -14,15 +14,15 @@
       "address": { "@type": "PostalAddress", "streetAddress": "Str. Mihai Eminescu 10", "addressLocality": "Roman", "addressCountry": "RO" }
     },
     {
-      "@type": "SoftwareApplication",
-      "name": "STRIX",
-      "applicationCategory": "BusinessApplication",
-      "operatingSystem": "Web",
+      "@type": "Service",
+      "name": "Penetration test con AI",
+      "serviceType": "Penetration testing",
       "url": "{{ site_url }}/",
-      "description": "Assistente AI per siti web: risponde ai visitatori usando solo i contenuti dell'azienda, raccoglie i contatti, conforme GDPR e AI Act.",
-      "publisher": { "@id": "{{ site_url }}/#org" },
+      "description": "Penetration test di siti, e-commerce, web app e API con agenti AI: ogni vulnerabilità dimostrata con una prova di sfruttamento, gravità CVSS e correzione. Solo con autorizzazione scritta del titolare.",
+      "provider": { "@id": "{{ site_url }}/#org" },
+      "areaServed": "EU",
       "offers": [{% for p in plans %}
-        { "@type": "Offer", "name": "{{ p.name }}", "price": "{{ p.monthly }}", "priceCurrency": "EUR" }{% if !loop.last %},{% endif %}{% endfor %}
+        { "@type": "Offer", "name": "{{ p.name }}", "price": "{{ p.price_value() }}", "priceCurrency": "EUR" }{% if !loop.last %},{% endif %}{% endfor %}
       ]
     }
   ]
@@ -33,11 +33,11 @@
 {% block nav %}
 <nav class="nav__links" id="menu" aria-label="Sezioni" data-menu>
   <a href="#come-funziona">Come funziona</a>
-  <a href="#funzioni">Funzioni</a>
-  <a href="#settori">Settori</a>
+  <a href="#cosa-trova">Cosa trova</a>
+  <a href="#report">Report</a>
   <a href="#prezzi">Prezzi</a>
   <a href="#faq">FAQ</a>
-  <a class="btn btn--sm btn--primary nav__cta" href="#richiesta"><span>Richiedi Strix</span></a>
+  <a class="btn btn--sm btn--primary nav__cta" href="#richiesta"><span>Richiedi un test</span></a>
 </nav>
 <button class="nav__toggle" type="button" aria-controls="menu" aria-expanded="false" data-menu-toggle>
   <span class="sr-only">Apri il menu</span><i></i><i></i>
@@ -55,27 +55,27 @@
     <div class="hero__copy">
       <p class="hud reveal">
         <span class="hud__dot" aria-hidden="true"></span>
-        <span>SYS://STRIX</span><span class="hud__sep" aria-hidden="true">/</span>
+        <span>SEC://CORE829</span><span class="hud__sep" aria-hidden="true">/</span>
         <span>ORA LOCALE <time data-clock>--:--</time></span><span class="hud__sep" aria-hidden="true">/</span>
-        <span class="hud__ok">ONLINE</span>
+        <span class="hud__ok">AGENTI PRONTI</span>
       </p>
       <h1 class="hero__title" id="hero-title" data-scramble>
-        Il tuo sito risponde.<br><span class="accent">Anche alle 3&nbsp;di&nbsp;notte.</span>
+        Attacchiamo il&nbsp;tuo&nbsp;sito.<br><span class="accent">Prima che lo faccia qualcun&nbsp;altro.</span>
       </h1>
       <p class="hero__lead reveal">
-        Strix è l'assistente AI che conosce la tua attività: risponde ai clienti usando
-        <strong>solo i tuoi contenuti</strong>, raccoglie i contatti e te li consegna.
-        Tu fai la richiesta, al resto pensa <strong>CORE829</strong>.
+        Penetration test con <strong>agenti AI</strong> che si comportano come veri attaccanti:
+        trovano le vulnerabilità del tuo sito o della tua app, le <strong>dimostrano con una prova reale</strong>
+        e ti dicono come chiuderle. Supervisionati dal team <strong>CORE829</strong>.
       </p>
       <div class="hero__cta reveal">
-        <a class="btn btn--primary" href="#richiesta" data-magnetic><span>Richiedi Strix</span><i class="btn__arrow" aria-hidden="true">→</i></a>
+        <a class="btn btn--primary" href="#richiesta" data-magnetic><span>Richiedi un test</span><i class="btn__arrow" aria-hidden="true">→</i></a>
         <a class="btn btn--ghost" href="#come-funziona"><span>Come funziona</span></a>
       </div>
       <ul class="hero__trust mono reveal" aria-label="Garanzie">
+        <li>Solo con autorizzazione scritta</li>
+        <li>Ogni vulnerabilità dimostrata</li>
+        <li>Report in italiano</li>
         <li>Dati in UE</li>
-        <li>Conforme AI Act</li>
-        <li>Zero cookie di profilazione</li>
-        <li>Prezzi in euro</li>
       </ul>
     </div>
 
@@ -83,22 +83,11 @@
       <div class="demo-frame">
         <span class="corner corner--tl" aria-hidden="true"></span><span class="corner corner--tr" aria-hidden="true"></span>
         <span class="corner corner--bl" aria-hidden="true"></span><span class="corner corner--br" aria-hidden="true"></span>
-        <div class="widget" data-chat="hotel" data-autoplay>
-          <div class="widget__head">
-            <span class="widget__avatar">{% include "partials/mark.html" %}</span>
-            <div class="widget__who"><strong data-chat-name>Hotel Belvedere</strong><small><i class="dot" aria-hidden="true"></i> Assistente online</small></div>
-            <span class="widget__tag mono">DEMO</span>
-          </div>
-          <p class="widget__notice">Stai parlando con un assistente AI</p>
-          <div class="widget__log" data-chat-log aria-hidden="true"></div>
-          <div class="widget__input" aria-hidden="true"><span data-chat-input class="is-placeholder">Scrivi un messaggio…</span><b>↵</b></div>
-          <p class="widget__foot mono">Powered by STRIX · CORE829</p>
-          <p class="sr-only">Esempio animato: un visitatore chiede a Strix disponibilità e parcheggio, Strix risponde citando le pagine del sito e raccoglie l'email.</p>
-        </div>
+        {% include "partials/console.html" %}
       </div>
-      <div class="chip chip--a mono" aria-hidden="true"><b>1,2 s</b> prima risposta</div>
-      <div class="chip chip--b mono" aria-hidden="true"><b>FONTE</b> listino-2026.pdf</div>
-      <div class="chip chip--c mono" aria-hidden="true"><b>✓</b> contatto inviato</div>
+      <div class="chip chip--a mono" aria-hidden="true"><b>6</b> agenti in parallelo</div>
+      <div class="chip chip--b mono" aria-hidden="true"><b>CVSS 9.1</b> critica</div>
+      <div class="chip chip--c mono" aria-hidden="true"><b>✓</b> prova verificata</div>
     </div>
   </div>
 
@@ -109,14 +98,14 @@
 <div class="marquee" aria-hidden="true">
   <div class="marquee__track">
     {% for _ in 0..2 %}
-    <span>Hotel &amp; B&amp;B</span><i>{% include "partials/mark.html" %}</i>
-    <span>Ristoranti</span><i>{% include "partials/mark.html" %}</i>
-    <span>Studi medici</span><i>{% include "partials/mark.html" %}</i>
-    <span>Studi legali</span><i>{% include "partials/mark.html" %}</i>
-    <span>Commercialisti</span><i>{% include "partials/mark.html" %}</i>
-    <span>E-commerce</span><i>{% include "partials/mark.html" %}</i>
-    <span>Aziende B2B</span><i>{% include "partials/mark.html" %}</i>
-    <span>Agenzie web</span><i>{% include "partials/mark.html" %}</i>
+    <span>SQL injection</span><i>{% include "partials/mark.html" %}</i>
+    <span>XSS</span><i>{% include "partials/mark.html" %}</i>
+    <span>IDOR</span><i>{% include "partials/mark.html" %}</i>
+    <span>SSRF</span><i>{% include "partials/mark.html" %}</i>
+    <span>Bypass login</span><i>{% include "partials/mark.html" %}</i>
+    <span>Attacchi JWT</span><i>{% include "partials/mark.html" %}</i>
+    <span>Logica di business</span><i>{% include "partials/mark.html" %}</i>
+    <span>Esecuzione remota</span><i>{% include "partials/mark.html" %}</i>
     {% endfor %}
   </div>
 </div>
@@ -126,23 +115,24 @@
   <div class="wrap">
     <p class="label mono reveal" data-scramble>// 01 — Il problema</p>
     <h2 class="display reveal" id="value-title">
-      Ogni domanda senza risposta è un cliente che <span class="strike">aspetta</span> <span class="accent">va dal concorrente</span>.
+      Il tuo sito viene già testato ogni giorno. Solo che <span class="strike">lo fai tu</span> <span class="accent">non lo fai tu</span>.
     </h2>
+    <p class="section__lead reveal">Bot e attaccanti scandagliano il web in continuazione, alla ricerca di una falla da sfruttare. Un penetration test ti fa vedere il tuo sito con i loro occhi, ma con il tuo permesso e a tuo vantaggio.</p>
     <div class="stats">
       <article class="stat card reveal" data-spotlight>
-        <p class="stat__num"><span data-count="24">24</span><small>/7</small></p>
-        <h3>Sempre acceso</h3>
-        <p>Risponde la notte, nei weekend e nei festivi, quando il tuo ufficio è chiuso.</p>
+        <p class="stat__num"><span data-count="10">10</span><small>/10</small></p>
+        <h3>Categorie OWASP Top 10</h3>
+        <p>Le dieci famiglie di rischio più diffuse nelle applicazioni web, più la logica di business che gli scanner non vedono.</p>
       </article>
       <article class="stat card reveal" data-spotlight>
-        <p class="stat__num"><small>&lt;</small><span data-count="1.5" data-decimals="1">1,5</span><small>s</small></p>
-        <h3>Risposte immediate</h3>
-        <p>La prima parola arriva in meno di un secondo e mezzo, il testo scorre in tempo reale.</p>
+        <p class="stat__num"><span data-count="100">100</span><small>%</small></p>
+        <h3>Vulnerabilità dimostrate</h3>
+        <p>Ogni problema segnalato arriva con la prova di sfruttamento e i passaggi per riprodurlo. Niente allarmi teorici.</p>
       </article>
       <article class="stat card reveal" data-spotlight>
-        <p class="stat__num"><span data-count="5">5</span><small>lingue</small></p>
-        <h3>Parla con tutti</h3>
-        <p>Italiano, inglese, tedesco, francese e spagnolo: risponde nella lingua del visitatore.</p>
+        <p class="stat__num"><span data-count="0">0</span><small>eccezioni</small></p>
+        <h3>Test senza autorizzazione</h3>
+        <p>Non tocchiamo nessun sistema senza la firma del titolare e la verifica del dominio. Mai.</p>
       </article>
     </div>
   </div>
@@ -153,135 +143,164 @@
   <div class="wrap">
     <div class="section__head">
       <p class="label mono reveal" data-scramble>// 02 — Come funziona</p>
-      <h2 class="display reveal" id="how-title">Tu fai una richiesta.<br><span class="accent">Noi facciamo il resto.</span></h2>
-      <p class="section__lead reveal">Nessun pannello da imparare, nessun testo da copiare. Il team CORE829 configura, addestra e mantiene il tuo assistente.</p>
+      <h2 class="display reveal" id="how-title">Tu fai una richiesta.<br><span class="accent">Noi attacchiamo. Con il tuo permesso.</span></h2>
+      <p class="section__lead reveal">Nessuno strumento da installare, nessuna competenza tecnica richiesta. Il team CORE829 gestisce ogni fase, dall'autorizzazione al retest.</p>
     </div>
 
-    <ol class="steps" data-steps>
+    <ol class="steps steps--5" data-steps>
       <li class="step reveal">
         <span class="step__num mono">01</span>
         <div class="step__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 3h10l4 4v14H5z"/><path d="M14 3v5h5M8 12h8M8 16h5"/></svg></div>
         <h3>Richiesta</h3>
-        <p>Compili il modulo in due minuti: il tuo sito, il settore e cosa deve fare l'assistente.</p>
+        <p>Ci indichi il sito o l'app da testare e cosa ti preoccupa. Ti rispondiamo con perimetro e preventivo.</p>
       </li>
       <li class="step reveal">
         <span class="step__num mono">02</span>
-        <div class="step__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3 3 8l9 5 9-5z"/><path d="m3 13 9 5 9-5M3 17.5 12 22l9-4.5"/></svg></div>
-        <h3>Addestramento</h3>
-        <p>Addestriamo Strix sulle pagine del tuo sito, sui PDF, sui listini e sulle FAQ. Ti mostriamo un'anteprima prima di andare online.</p>
+        <div class="step__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3 4 6v6c0 4.5 3.4 8.3 8 9 4.6-.7 8-4.5 8-9V6z"/><path d="m9 12 2 2 4-4"/></svg></div>
+        <h3>Autorizzazione</h3>
+        <p>Firmi la lettera di incarico, verifichiamo che il dominio sia tuo e concordiamo orari e limiti del test.</p>
       </li>
       <li class="step reveal">
         <span class="step__num mono">03</span>
-        <div class="step__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m8 7-5 5 5 5M16 7l5 5-5 5M14 4l-4 16"/></svg></div>
-        <h3>Installazione</h3>
-        <p>Una riga di codice, il plugin WordPress o un link alla chat ospitata. Se preferisci, la installiamo noi.</p>
+        <div class="step__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/></svg></div>
+        <h3>Attacco controllato</h3>
+        <p>Gli agenti AI mappano il sistema e lo attaccano in parallelo, concatenando le falle come farebbe un hacker.</p>
       </li>
       <li class="step reveal">
         <span class="step__num mono">04</span>
-        <div class="step__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M2 12h4l3-8 6 16 3-8h4"/></svg></div>
-        <h3>Online</h3>
-        <p>Strix risponde e raccoglie contatti. Ogni mese ricevi un resoconto: domande, contatti, ore risparmiate.</p>
+        <div class="step__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 3h14v18H5z"/><path d="M9 8h6M9 12h6M9 16h3"/></svg></div>
+        <h3>Prova e report</h3>
+        <p>Ogni vulnerabilità viene dimostrata, classificata per gravità e corredata della correzione. Il team CORE829 rivede tutto.</p>
+      </li>
+      <li class="step reveal">
+        <span class="step__num mono">05</span>
+        <div class="step__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-2.3-5.6"/><path d="M20 4v5h-5"/></svg></div>
+        <h3>Retest</h3>
+        <p>Dopo le correzioni rilanciamo gli stessi attacchi e certifichiamo nel report che le falle sono chiuse.</p>
       </li>
     </ol>
   </div>
 </section>
 
-<!-- ============================== INSTALLAZIONE ============================== -->
-<section class="section install" aria-labelledby="install-title">
+<!-- ============================== AGENTI / PERIMETRO ============================== -->
+<section class="section install" aria-labelledby="agents-title">
   <div class="wrap install__grid">
     <div class="install__copy">
-      <p class="label mono reveal" data-scramble>// 03 — Installazione</p>
-      <h2 class="display reveal" id="install-title">Funziona su qualsiasi sito.<br><span class="accent">Anche quelli vecchi.</span></h2>
-      <p class="section__lead reveal">Il widget gira nel browser del visitatore, non sul tuo server: basta poterlo inserire nella pagina. Dove non si può toccare il codice, usiamo un link alla chat ospitata da noi.</p>
-      <ul class="platforms reveal" aria-label="Piattaforme compatibili">
-        <li>WordPress</li><li>Shopify</li><li>Wix</li><li>Squarespace</li><li>Joomla</li><li>Drupal</li><li>HTML / PHP</li><li>Siti datati</li>
+      <p class="label mono reveal" data-scramble>// 03 — Gli agenti</p>
+      <h2 class="display reveal" id="agents-title">Una squadra di hacker AI.<br><span class="accent">Un perimetro deciso da te.</span></h2>
+      <p class="section__lead reveal">Agenti specializzati lavorano in parallelo e si passano le scoperte: uno trova un endpoint nascosto, un altro ci prova un'iniezione, un terzo verifica se porta ai dati di altri utenti. Tutto dentro i limiti scritti nella tua autorizzazione.</p>
+      <ul class="platforms reveal" aria-label="Agenti specializzati">
+        <li>Ricognizione</li><li>Iniezioni</li><li>Controllo accessi</li><li>Lato client</li><li>Logica di business</li><li>API</li><li>Validazione</li>
       </ul>
     </div>
 
     <div class="terminal reveal" data-terminal>
       <div class="terminal__bar">
         <span class="terminal__dots" aria-hidden="true"><i></i><i></i><i></i></span>
-        <div class="terminal__tabs" role="tablist" aria-label="Metodo di installazione">
-          <button type="button" role="tab" aria-selected="true" data-tab="script">Script</button>
-          <button type="button" role="tab" aria-selected="false" data-tab="wordpress">WordPress</button>
-          <button type="button" role="tab" aria-selected="false" data-tab="link">Link</button>
+        <div class="terminal__tabs" role="tablist" aria-label="Modalità di test">
+          <button type="button" role="tab" aria-selected="true" data-tab="esterno">Dall'esterno</button>
+          <button type="button" role="tab" aria-selected="false" data-tab="login">Con login</button>
+          <button type="button" role="tab" aria-selected="false" data-tab="codice">Codice sorgente</button>
         </div>
       </div>
       <div class="terminal__body mono">
-        <p class="terminal__hint" data-term-hint>Incolla prima di &lt;/body&gt;</p>
+        <p class="terminal__hint" data-term-hint>Perimetro del test</p>
         <pre class="terminal__code" tabindex="0"><code data-term-code></code><span class="caret" aria-hidden="true"></span></pre>
         <div class="terminal__out" data-term-out aria-live="polite"></div>
       </div>
-      <button class="terminal__copy mono" type="button" data-term-copy>Copia</button>
-      <div hidden data-term-src="script" data-text="&lt;script src=&quot;https://cdn.{{ widget_domain }}/w.js&quot; data-id=&quot;CORE-8X29&quot; async&gt;&lt;/script&gt;"></div>
-      <div hidden data-term-src="wordpress" data-text="Plugin → Aggiungi nuovo → “Strix”&#10;Codice di attivazione: CORE-8X29"></div>
-      <div hidden data-term-src="link" data-text="https://chat.{{ widget_domain }}/CORE-8X29"></div>
+      <div hidden data-term-src="esterno" data-text="obiettivo: https://shop.tuosito.it&#10;modalità:  black-box (come un attaccante esterno)&#10;finestra:  lun–ven, 22:00–06:00&#10;esclusi:   /checkout/pagamento, attacchi DoS"></div>
+      <div hidden data-term-src="login" data-text="obiettivo: https://app.tuosito.it&#10;modalità:  autenticato (2 utenti di test)&#10;ruoli:     cliente, amministratore&#10;focus:     dati di altri clienti, permessi"></div>
+      <div hidden data-term-src="codice" data-text="obiettivo:  github.com/tuaazienda/app&#10;modalità:   white-box (codice + app in staging)&#10;ambiente:   https://staging.tuosito.it&#10;rilasci:    test a ogni pull request"></div>
     </div>
   </div>
 </section>
 
-<!-- ============================== FUNZIONI ============================== -->
-<section class="section features" id="funzioni" aria-labelledby="features-title">
+<!-- ============================== COSA TROVA ============================== -->
+<section class="section features" id="cosa-trova" aria-labelledby="finds-title">
   <div class="wrap">
     <div class="section__head">
-      <p class="label mono reveal" data-scramble>// 04 — Funzioni</p>
-      <h2 class="display reveal" id="features-title">Lavora come il tuo<br><span class="accent">miglior collaboratore.</span></h2>
+      <p class="label mono reveal" data-scramble>// 04 — Cosa trova</p>
+      <h2 class="display reveal" id="finds-title">Le falle che contano.<br><span class="accent">Quelle che un attaccante usa davvero.</span></h2>
+      <p class="section__lead reveal">Copriamo l'OWASP Top 10 e oltre: anche gli errori di logica specifici della tua attività, che nessuno scanner automatico è in grado di capire.</p>
+    </div>
+
+    <div class="vulns">
+      <article class="vuln card reveal" data-spotlight><p class="vuln__tag mono">ACCESSI</p><h3>Controllo degli accessi</h3><p>Dati di altri utenti raggiungibili cambiando un numero nell'indirizzo, privilegi da amministratore ottenuti senza averli, login aggirabile.</p></article>
+      <article class="vuln card reveal" data-spotlight><p class="vuln__tag mono">INIEZIONI</p><h3>Iniezioni</h3><p>SQL e NoSQL, comandi di sistema, template lato server: input che il sito esegue invece di trattare come semplice testo.</p></article>
+      <article class="vuln card reveal" data-spotlight><p class="vuln__tag mono">SERVER</p><h3>Lato server</h3><p>SSRF, XXE, deserializzazione insicura ed esecuzione di codice remoto: le falle che aprono le porte dell'infrastruttura.</p></article>
+      <article class="vuln card reveal" data-spotlight><p class="vuln__tag mono">CLIENT</p><h3>Lato browser</h3><p>XSS memorizzato, riflesso e DOM, CSRF, prototype pollution: attacchi che colpiscono i tuoi clienti attraverso il tuo sito.</p></article>
+      <article class="vuln card reveal" data-spotlight><p class="vuln__tag mono">LOGICA</p><h3>Logica di business</h3><p>Prezzi modificabili nel carrello, coupon riutilizzabili, passaggi obbligatori saltati, race condition sui pagamenti.</p></article>
+      <article class="vuln card reveal" data-spotlight><p class="vuln__tag mono">SESSIONI</p><h3>Autenticazione e sessioni</h3><p>Token JWT manipolabili, sessioni che non scadono, protezioni deboli contro il furto di credenziali.</p></article>
+      <article class="vuln card reveal" data-spotlight><p class="vuln__tag mono">API</p><h3>API</h3><p>Endpoint senza autenticazione, campi che l'utente non dovrebbe poter modificare, limiti di frequenza aggirabili.</p></article>
+      <article class="vuln card reveal" data-spotlight><p class="vuln__tag mono">CONFIG</p><h3>Configurazioni e cloud</h3><p>Servizi esposti per errore, pannelli di amministrazione raggiungibili, header di sicurezza mancanti, componenti obsoleti.</p></article>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== REPORT ============================== -->
+<section class="section report-sec" id="report" aria-labelledby="report-title">
+  <div class="wrap">
+    <div class="section__head">
+      <p class="label mono reveal" data-scramble>// 05 — Il report</p>
+      <h2 class="display reveal" id="report-title">Non una lista di allarmi.<br><span class="accent">Prove, priorità e soluzioni.</span></h2>
     </div>
 
     <div class="bento">
       <article class="card bento__a reveal" data-spotlight>
-        <p class="card__kicker mono">Zero invenzioni</p>
-        <h3>Risponde solo con i tuoi contenuti</h3>
-        <p>Pagine del sito, PDF, listini, FAQ. Se un'informazione non c'è, Strix non la inventa: lo dice e raccoglie il contatto.</p>
-        <div class="sources" aria-hidden="true">
-          <span class="mono">camere.html</span><span class="mono">listino-2026.pdf</span><span class="mono">faq.docx</span><span class="mono">menu.pdf</span><span class="mono">spedizioni.html</span>
-        </div>
-        <div class="mini-chat" aria-hidden="true">
-          <p class="mini-chat__q">Consegnate anche a Bolzano?</p>
-          <p class="mini-chat__a">Non ho questa informazione sul sito. Ti metto in contatto con il team: mi lasci la tua email?</p>
+        <p class="card__kicker mono">Esempio di vulnerabilità nel report</p>
+        <div class="finding finding--static">
+          <div class="finding__top"><span class="sev-pill sev-pill--crit mono">CRITICA · CVSS 9.1</span><span class="mono finding__id">VULN-003</span></div>
+          <h3>Il prezzo del carrello si può modificare dal browser</h3>
+          <p>Il server accetta il prezzo inviato dal browser invece di ricalcolarlo. Chiunque può acquistare qualsiasi prodotto a 0,01 €.</p>
+          <p class="finding__label mono">Prova di sfruttamento</p>
+          <pre class="finding__poc mono">POST /api/carrello/conferma
+{ "prodotto": 4471, "quantita": 1, <mark>"prezzo": 0.01</mark> }
+
+→ 200 OK · ordine #10582 creato a 0,01 €</pre>
+          <p class="finding__label mono">Correzione</p>
+          <p>Ricalcolare sempre prezzo e totale sul server partendo dal catalogo, ignorando i valori inviati dal client.</p>
         </div>
       </article>
 
       <article class="card bento__b reveal" data-spotlight>
-        <p class="card__kicker mono">Lead</p>
-        <h3>Raccoglie i contatti</h3>
-        <p>Nome, email e telefono arrivano subito dove li vuoi.</p>
-        <div class="lead-card" aria-hidden="true">
-          <p class="mono lead-card__title"><i class="dot"></i> NUOVO CONTATTO</p>
-          <p><strong>Mario Rossi</strong> · camera doppia, 14–16 ago</p>
-          <p class="lead-card__routes mono"><span>Email ✓</span><span>WhatsApp ✓</span><span>CRM ✓</span></p>
+        <p class="card__kicker mono">Priorità</p>
+        <h3>Sai da dove cominciare</h3>
+        <p>Ogni vulnerabilità ha un punteggio CVSS, lo standard internazionale di gravità, e una priorità di intervento.</p>
+        <div class="sevbars mono" aria-hidden="true">
+          <p><span>Critica</span><i class="sevbars__bar sevbars__bar--crit"></i><b>1</b></p>
+          <p><span>Alta</span><i class="sevbars__bar sevbars__bar--high"></i><b>2</b></p>
+          <p><span>Media</span><i class="sevbars__bar sevbars__bar--med"></i><b>4</b></p>
+          <p><span>Bassa</span><i class="sevbars__bar sevbars__bar--low"></i><b>6</b></p>
         </div>
+        <p class="bars__note mono">Esempio</p>
       </article>
 
       <article class="card bento__c reveal" data-spotlight>
-        <p class="card__kicker mono">Lingue</p>
-        <h3>Parla 5 lingue</h3>
-        <p class="lang mono" aria-hidden="true"><span data-lang-cycle>Ciao</span><i class="caret"></i></p>
-        <p>Risponde nella lingua del visitatore.</p>
+        <p class="card__kicker mono">Correzione</p>
+        <h3>La soluzione, già scritta</h3>
+        <pre class="diff mono" aria-hidden="true"><span class="diff__del">- totale = req.body.prezzo</span>
+<span class="diff__add">+ totale = catalogo.prezzo(id)</span>
+<span class="diff__add">+   * quantita</span></pre>
       </article>
 
       <article class="card bento__d reveal" data-spotlight>
-        <p class="card__kicker mono">Umano</p>
-        <h3>Passa la parola a te</h3>
-        <p>Quando serve una persona, la conversazione passa a te o al tuo staff, con tutto lo storico.</p>
-        <div class="handoff mono" aria-hidden="true"><span>AI</span><i></i><span>OPERATORE</span></div>
+        <p class="card__kicker mono">Retest</p>
+        <h3>Verifichiamo che sia chiusa</h3>
+        <p>Dopo le correzioni ripetiamo gli stessi attacchi.</p>
+        <div class="handoff mono" aria-hidden="true"><span>VULNERABILE</span><i></i><span>CHIUSA</span></div>
       </article>
 
       <article class="card bento__e reveal" data-spotlight>
-        <p class="card__kicker mono">Prestazioni</p>
-        <h3>Leggero e invisibile</h3>
-        <p class="weight"><span data-count="40">40</span><small>KB max</small></p>
-        <p>Isolato dal resto della pagina: non rallenta il sito e non ne rompe la grafica.</p>
+        <p class="card__kicker mono">Due livelli</p>
+        <h3>Per gli sviluppatori e per la direzione</h3>
+        <p>Un report tecnico con prove e correzioni, e una sintesi chiara per chi deve decidere tempi e budget.</p>
       </article>
 
       <article class="card bento__f reveal" data-spotlight>
-        <p class="card__kicker mono">Resoconto</p>
-        <h3>Ogni mese sai cosa ha fatto</h3>
-        <p>Domande ricevute, contatti raccolti, ore risparmiate e le domande senza risposta da colmare insieme.</p>
-        <div class="bars" aria-hidden="true">
-          <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
-        </div>
-        <p class="bars__note mono">Esempio di resoconto</p>
+        <p class="card__kicker mono">Rilasci</p>
+        <h3>Sicuro anche dopo il prossimo aggiornamento</h3>
+        <p>Con la protezione continua gli agenti testano ogni rilascio importante, direttamente dalla tua pipeline su GitHub o GitLab.</p>
+        <div class="pipe mono" aria-hidden="true"><span>commit</span><i></i><span>build</span><i></i><span class="pipe__sec">test di sicurezza</span><i></i><span>rilascio</span></div>
       </article>
     </div>
   </div>
@@ -293,60 +312,50 @@
     <div class="radar reveal" aria-hidden="true">
       <div class="radar__ring"></div><div class="radar__ring"></div><div class="radar__ring"></div>
       <div class="radar__sweep"></div>
-      <span class="radar__node mono radar__node--1">GDPR</span>
-      <span class="radar__node mono radar__node--2">AI ACT</span>
-      <span class="radar__node mono radar__node--3">DATI UE</span>
-      <span class="radar__node mono radar__node--4">DPA</span>
+      <span class="radar__node mono radar__node--1">AUTORIZZAZIONE</span>
+      <span class="radar__node mono radar__node--2">GDPR ART. 32</span>
+      <span class="radar__node mono radar__node--3">NIS2</span>
+      <span class="radar__node mono radar__node--4">OWASP</span>
       <div class="radar__core">{% include "partials/mark.html" %}</div>
     </div>
     <div>
-      <p class="label mono reveal" data-scramble>// 05 — Conformità</p>
-      <h2 class="display reveal" id="compliance-title">Costruito per le regole europee.<br><span class="accent">Dal primo giorno.</span></h2>
+      <p class="label mono reveal" data-scramble>// 06 — Regole d'ingaggio</p>
+      <h2 class="display reveal" id="compliance-title">Hacker sì.<br><span class="accent">Fuorilegge mai.</span></h2>
       <ul class="checks">
-        <li class="reveal"><b>Dati ospitati in UE.</b> Server europei, nessun trasferimento fuori dall'Unione.</li>
-        <li class="reveal"><b>Avviso AI Act sempre attivo.</b> Il visitatore sa che sta parlando con un'AI, come richiede l'art. 50.</li>
-        <li class="reveal"><b>DPA in italiano.</b> Firmiamo la nomina a responsabile del trattamento con ogni cliente.</li>
-        <li class="reveal"><b>Nessun addestramento sui tuoi dati.</b> I fornitori AI non usano le conversazioni per allenare i modelli.</li>
-        <li class="reveal"><b>Cancellazione automatica.</b> Le conversazioni non restano archiviate per sempre.</li>
-        <li class="reveal"><b>Zero cookie di profilazione.</b> Non devi modificare il banner dei cookie del tuo sito.</li>
+        <li class="reveal"><b>Autorizzazione scritta, sempre.</b> Nessun test parte senza la lettera di incarico firmata dal titolare del sistema.</li>
+        <li class="reveal"><b>Dominio verificato.</b> Prima di iniziare controlliamo che il sito sia tuo, con un record DNS o un file sul server.</li>
+        <li class="reveal"><b>Perimetro e orari concordati.</b> Testiamo solo ciò che è nell'incarico, nelle finestre orarie che scegli tu.</li>
+        <li class="reveal"><b>Test non distruttivi.</b> Niente cancellazione di dati e niente attacchi di saturazione che possano fermare il servizio.</li>
+        <li class="reveal"><b>Massima riservatezza.</b> Accordo di riservatezza, report consegnati in modo cifrato, dati conservati in UE.</li>
+        <li class="reveal"><b>Utile per GDPR e NIS2.</b> L'art. 32 del GDPR chiede di testare regolarmente l'efficacia delle misure di sicurezza: il report lo documenta.</li>
       </ul>
     </div>
   </div>
 </section>
 
-<!-- ============================== SETTORI ============================== -->
-<section class="section sectors" id="settori" aria-labelledby="sectors-title">
+<!-- ============================== PER CHI ============================== -->
+<section class="section sectors" id="per-chi" aria-labelledby="sectors-title">
   <div class="wrap">
     <div class="section__head">
-      <p class="label mono reveal" data-scramble>// 06 — Settori</p>
-      <h2 class="display reveal" id="sectors-title">Pronto per il tuo settore.<br><span class="accent">Utile dal primo giorno.</span></h2>
-      <p class="section__lead reveal">Partiamo da configurazioni già pensate per la tua attività, con le domande tipiche già previste. Scegli un settore e guarda Strix al lavoro.</p>
+      <p class="label mono reveal" data-scramble>// 07 — Per chi</p>
+      <h2 class="display reveal" id="sectors-title">Ogni attività ha i suoi punti deboli.<br><span class="accent">Gli agenti sanno dove cercare.</span></h2>
+      <p class="section__lead reveal">Scegli un caso e guarda una campagna di test dal vivo. Gli obiettivi e le vulnerabilità sono esempi realistici.</p>
     </div>
 
     <div class="sectors__grid">
-      <div class="sectors__tabs reveal" role="tablist" aria-label="Scegli un settore" data-sector-tabs>
-        <button type="button" role="tab" aria-selected="true" data-sector="hotel"><span class="mono">01</span> Hotel e B&amp;B<small>Disponibilità, servizi, check-in, prenotazioni</small></button>
-        <button type="button" role="tab" aria-selected="false" data-sector="ristorante"><span class="mono">02</span> Ristoranti<small>Menù, allergeni, orari, tavoli</small></button>
-        <button type="button" role="tab" aria-selected="false" data-sector="medico"><span class="mono">03</span> Studi medici<small>Prestazioni, costi, appuntamenti</small></button>
-        <button type="button" role="tab" aria-selected="false" data-sector="ecommerce"><span class="mono">04</span> E-commerce<small>Spedizioni, resi, prodotti</small></button>
-        <button type="button" role="tab" aria-selected="false" data-sector="commercialista"><span class="mono">05</span> Commercialisti<small>Servizi, scadenze, prima consulenza</small></button>
+      <div class="sectors__tabs reveal" role="tablist" aria-label="Scegli un caso" data-sector-tabs>
+        <button type="button" role="tab" aria-selected="true" data-sector="ecommerce"><span class="mono">01</span> E-commerce<small>Carrello, pagamenti, account dei clienti</small></button>
+        <button type="button" role="tab" aria-selected="false" data-sector="saas"><span class="mono">02</span> Web app e SaaS<small>Dati separati tra clienti, ruoli, permessi</small></button>
+        <button type="button" role="tab" aria-selected="false" data-sector="sanita"><span class="mono">03</span> Sanità<small>Referti, prenotazioni, dati sanitari</small></button>
+        <button type="button" role="tab" aria-selected="false" data-sector="wordpress"><span class="mono">04</span> Siti WordPress<small>Plugin, pannello di amministrazione, moduli</small></button>
+        <button type="button" role="tab" aria-selected="false" data-sector="api"><span class="mono">05</span> API<small>App mobili, integrazioni, servizi esterni</small></button>
       </div>
 
       <div class="sectors__demo reveal">
         <div class="demo-frame">
           <span class="corner corner--tl" aria-hidden="true"></span><span class="corner corner--tr" aria-hidden="true"></span>
           <span class="corner corner--bl" aria-hidden="true"></span><span class="corner corner--br" aria-hidden="true"></span>
-          <div class="widget" data-chat="hotel" data-sector-widget>
-            <div class="widget__head">
-              <span class="widget__avatar">{% include "partials/mark.html" %}</span>
-              <div class="widget__who"><strong data-chat-name>Hotel Belvedere</strong><small><i class="dot" aria-hidden="true"></i> Assistente online</small></div>
-              <span class="widget__tag mono">DEMO</span>
-            </div>
-            <p class="widget__notice">Stai parlando con un assistente AI</p>
-            <div class="widget__log" data-chat-log aria-hidden="true"></div>
-            <div class="widget__input" aria-hidden="true"><span data-chat-input class="is-placeholder">Scrivi un messaggio…</span><b>↵</b></div>
-            <p class="widget__foot mono">Powered by STRIX · CORE829</p>
-          </div>
+          {% include "partials/console.html" %}
         </div>
       </div>
     </div>
@@ -357,27 +366,23 @@
 <section class="section pricing" id="prezzi" aria-labelledby="pricing-title">
   <div class="wrap">
     <div class="section__head section__head--center">
-      <p class="label mono reveal" data-scramble>// 07 — Prezzi</p>
-      <h2 class="display reveal" id="pricing-title">Prezzi chiari, in euro.<br><span class="accent">Nessuna sorpresa.</span></h2>
-      <p class="section__lead reveal">Canone fisso con conversazioni incluse. Nessun costo per operatore, nessun costo per risposta.</p>
-      <div class="billing reveal" role="group" aria-label="Periodo di fatturazione" data-billing>
-        <button type="button" aria-pressed="true" data-period="monthly">Mensile</button>
-        <button type="button" aria-pressed="false" data-period="yearly">Annuale <em>2 mesi gratis</em></button>
-        <span class="billing__thumb" aria-hidden="true"></span>
-      </div>
+      <p class="label mono reveal" data-scramble>// 08 — Prezzi</p>
+      <h2 class="display reveal" id="pricing-title">Il costo di un test.<br><span class="accent">Non quello di un attacco.</span></h2>
+      <p class="section__lead reveal">Prezzi chiari in euro. Il preventivo finale dipende dal perimetro e te lo confermiamo prima di iniziare.</p>
     </div>
 
-    <div class="plans">
+    <div class="plans plans--3">
       {% for p in plans %}
       <article class="plan card reveal{% if p.featured %} plan--featured{% endif %}" data-spotlight>
-        {% if p.featured %}<p class="plan__badge mono">Il più scelto</p>{% endif %}
+        {% if p.featured %}<p class="plan__badge mono">Il più richiesto</p>{% endif %}
         <h3 class="plan__name mono">{{ p.name }}</h3>
         <p class="plan__for">{{ p.audience }}</p>
         <p class="plan__price">
-          <span class="plan__num" data-price data-monthly="{{ p.monthly }}" data-yearly="{{ p.yearly() }}">{{ p.monthly }}</span><span class="plan__cur">€</span>
-          <span class="plan__per" data-per>/mese</span>
+          <span class="plan__from mono">da</span>
+          <span class="plan__num">{{ p.price }}</span><span class="plan__cur">€</span>
+          <span class="plan__per">{{ p.unit }}</span>
         </p>
-        <p class="plan__note mono" data-yearly-note="equivale a {{ p.yearly_per_month() }} €/mese" data-monthly-note="IVA esclusa">IVA esclusa</p>
+        <p class="plan__note mono">IVA esclusa</p>
         <ul class="plan__list">
           {% for f in p.features %}<li>{{ f }}</li>{% endfor %}
         </ul>
@@ -389,19 +394,18 @@
     <div class="enterprise card reveal" data-spotlight>
       <div>
         <h3 class="mono">Enterprise</h3>
-        <p>Hosting dedicato, accesso unico aziendale (SSO), livelli di servizio garantiti e contratto su misura. Per grandi aziende e pubblica amministrazione.</p>
+        <p>Più applicazioni, revisione del codice sorgente, supporto alla conformità NIS2, test programmati durante l'anno e contratto su misura.</p>
       </div>
-      <p class="enterprise__price">da <b>800 €</b>/mese</p>
+      <p class="enterprise__price">su <b>misura</b></p>
       <a class="btn btn--line" href="#richiesta" data-plan-pick="enterprise"><span>Parliamone</span></a>
     </div>
 
     <ul class="pricing__notes mono reveal">
-      <li>Prova di 14 giorni</li>
-      <li>Configurazione iniziale a cura di CORE829: 290 € una tantum</li>
-      <li>Conversazioni extra: 15 € ogni 500</li>
-      <li>Sito aggiuntivo: 9 €/mese</li>
+      <li>Autorizzazione e verifica del dominio incluse</li>
+      <li>Report in italiano</li>
+      <li>Consegna cifrata</li>
+      <li>Call di presentazione dei risultati</li>
     </ul>
-    <p class="pricing__def reveal">Una <strong>conversazione</strong> è la sessione di un visitatore, con tutti i suoi messaggi, nell'arco di 24 ore.</p>
   </div>
 </section>
 
@@ -411,15 +415,15 @@
     <div class="agency__box reveal">
       <div class="agency__copy">
         <p class="label mono">// Partner</p>
-        <h2 class="display display--sm" id="agency-title">Sei un'agenzia web?<br><span class="accent">Rivendi Strix con il tuo marchio.</span></h2>
-        <p>Offri ai tuoi clienti un assistente AI senza sviluppare nulla. Tu mantieni la relazione e il margine, noi pensiamo alla parte tecnica.</p>
+        <h2 class="display display--sm" id="agency-title">Sei un'agenzia web?<br><span class="accent">Consegna siti già testati.</span></h2>
+        <p>Aggiungi il penetration test ai tuoi progetti e ai contratti di manutenzione. Tu mantieni il cliente, noi facciamo i test e ti diamo un report da consegnare.</p>
       </div>
       <ul class="agency__perks mono">
-        <li><b>30–40%</b><span>di margine sulla rivendita</span></li>
-        <li><b>White-label</b><span>col marchio della tua agenzia</span></li>
-        <li><b>0 righe</b><span>di codice da scrivere</span></li>
+        <li><b>Prezzi</b><span>riservati ai partner</span></li>
+        <li><b>Report</b><span>col marchio della tua agenzia</span></li>
+        <li><b>0</b><span>competenze di sicurezza richieste</span></li>
       </ul>
-      <a class="btn btn--primary" href="#richiesta" data-plan-pick="agency" data-sector-pick="agenzia"><span>Diventa partner</span><i class="btn__arrow" aria-hidden="true">→</i></a>
+      <a class="btn btn--primary" href="#richiesta" data-type-pick="agenzia"><span>Diventa partner</span><i class="btn__arrow" aria-hidden="true">→</i></a>
     </div>
   </div>
 </section>
@@ -428,38 +432,38 @@
 <section class="section faq" id="faq" aria-labelledby="faq-title">
   <div class="wrap faq__grid">
     <div>
-      <p class="label mono reveal" data-scramble>// 08 — Domande frequenti</p>
+      <p class="label mono reveal" data-scramble>// 09 — Domande frequenti</p>
       <h2 class="display reveal" id="faq-title">Le risposte,<br><span class="accent">prima di chiedere.</span></h2>
       <p class="section__lead reveal">Non trovi quello che cerchi? Scrivici a <a href="mailto:hello@core829.net">hello@core829.net</a>.</p>
     </div>
     <div class="faq__list">
       <details class="reveal">
-        <summary>Devo saper programmare o gestire un pannello?</summary>
-        <div><p>No. Tu compili la richiesta, il team CORE829 configura, addestra e installa l'assistente. Per qualsiasi modifica basta scriverci.</p></div>
+        <summary>È legale attaccare un sito?</summary>
+        <div><p>Sì, se c'è l'autorizzazione del titolare. Per questo ogni test parte solo dopo la firma della lettera di incarico, che stabilisce cosa possiamo testare, quando e con quali limiti, e dopo aver verificato che il dominio sia tuo. Senza autorizzazione non lavoriamo.</p></div>
       </details>
       <details class="reveal">
-        <summary>Strix può inventare risposte?</summary>
-        <div><p>È progettato per rispondere solo con i contenuti che ci fornisci. Se non trova un'informazione lo dice e raccoglie il contatto del visitatore. Le domande rimaste senza risposta finiscono nel resoconto mensile, così possiamo completare le informazioni.</p></div>
+        <summary>Il test può bloccare o danneggiare il mio sito?</summary>
+        <div><p>I test sono non distruttivi: non cancelliamo dati e non facciamo attacchi di saturazione. Lavoriamo nelle finestre orarie che scegli tu e possiamo escludere le parti più delicate. Per i sistemi critici consigliamo di testare un ambiente di prova identico a quello reale.</p></div>
       </details>
       <details class="reveal">
-        <summary>Funziona sul mio sito?</summary>
-        <div><p>Sì, su qualsiasi sito in cui si può inserire una riga di codice, con un plugin dedicato per WordPress. Se il tuo sito non permette di toccare il codice, aggiungiamo un link o un pulsante che apre la chat in una pagina ospitata da noi.</p></div>
+        <summary>Che differenza c'è con uno scanner automatico?</summary>
+        <div><p>Uno scanner segnala ciò che potrebbe essere un problema, con molti falsi allarmi. Gli agenti invece provano a sfruttare davvero ogni falla e la riportano solo se ci riescono, con la prova. In più ragionano sulla logica del tuo sito, per esempio su come funzionano carrello, ruoli e permessi.</p></div>
       </details>
       <details class="reveal">
-        <summary>Cosa si intende per “conversazione”?</summary>
-        <div><p>Una conversazione è la sessione di un visitatore, con tutti i suoi messaggi, nell'arco di 24 ore. Contiamo le conversazioni e non i singoli messaggi, così sai sempre cosa stai pagando.</p></div>
+        <summary>Sostituisce un penetration test manuale?</summary>
+        <div><p>Per la maggior parte di siti, e-commerce e web app offre una copertura ampia, in tempi e a costi molto più bassi. Ogni risultato è rivisto dal team CORE829. Per sistemi ad altissimo rischio possiamo affiancare verifiche manuali mirate: lo valutiamo insieme nel preventivo.</p></div>
       </details>
       <details class="reveal">
-        <summary>E se supero le conversazioni incluse?</summary>
-        <div><p>Le conversazioni aggiuntive costano 15 € ogni 500. Se il traffico cresce stabilmente, ti consigliamo il piano più adatto.</p></div>
+        <summary>Cosa serve da parte mia?</summary>
+        <div><p>L'indirizzo del sistema, la firma dell'autorizzazione e un referente tecnico. Per i test con login ci servono utenti di prova. Per la revisione del codice, l'accesso in lettura al repository.</p></div>
       </details>
       <details class="reveal">
-        <summary>I dati dei miei clienti sono al sicuro?</summary>
-        <div><p>I dati restano su server in UE, firmiamo con te la nomina a responsabile del trattamento (DPA), le conversazioni non vengono usate per addestrare i modelli AI e vengono cancellate automaticamente.</p></div>
+        <summary>Quanto tempo ci vuole?</summary>
+        <div><p>Dipende dal perimetro. Un check-up si chiude in genere in pochi giorni dalla firma; un test completo su una web app richiede di più. I tempi esatti sono indicati nel preventivo.</p></div>
       </details>
       <details class="reveal">
-        <summary>Devo modificare il banner dei cookie?</summary>
-        <div><p>No. Il widget di Strix non installa cookie di profilazione, quindi non richiede un consenso aggiuntivo.</p></div>
+        <summary>Che fine fanno le informazioni sulle vulnerabilità?</summary>
+        <div><p>Sono riservate: le condividiamo solo con i referenti indicati da te, con consegna cifrata e accordo di riservatezza. I dati restano su server in UE e vengono cancellati al termine del periodo concordato.</p></div>
       </details>
     </div>
   </div>
@@ -469,13 +473,13 @@
 <section class="section request" id="richiesta" aria-labelledby="request-title">
   <div class="wrap request__grid">
     <div class="request__copy">
-      <p class="label mono reveal" data-scramble>// 09 — Richiesta</p>
-      <h2 class="display reveal" id="request-title">Attiva Strix<br><span class="accent">sul tuo sito.</span></h2>
-      <p class="section__lead reveal">Compila il modulo: analizziamo il tuo sito e ti ricontattiamo con una proposta. Nessun impegno.</p>
+      <p class="label mono reveal" data-scramble>// 10 — Richiesta</p>
+      <h2 class="display reveal" id="request-title">Scopri le tue falle<br><span class="accent">prima degli altri.</span></h2>
+      <p class="section__lead reveal">Compila il modulo: ti ricontattiamo con perimetro, tempi e preventivo. Nessun test parte senza la tua autorizzazione firmata.</p>
       <ol class="next reveal">
-        <li><span class="mono">01</span><p><b>Analizziamo il tuo sito</b> e i contenuti da cui l'assistente imparerà.</p></li>
-        <li><span class="mono">02</span><p><b>Ti mostriamo un'anteprima</b> già addestrata sulle tue pagine.</p></li>
-        <li><span class="mono">03</span><p><b>Attiviamo Strix</b> e ti inviamo il primo resoconto dopo 30 giorni.</p></li>
+        <li><span class="mono">01</span><p><b>Definiamo il perimetro</b> insieme: cosa testare, come e quando.</p></li>
+        <li><span class="mono">02</span><p><b>Firmi l'autorizzazione</b> e verifichiamo che il dominio sia tuo.</p></li>
+        <li><span class="mono">03</span><p><b>Ricevi il report</b> con prove, priorità e correzioni, poi il retest.</p></li>
       </ol>
     </div>
 
@@ -493,7 +497,7 @@
           <p class="field__err" id="e-azienda" role="alert"></p>
         </div>
         <div class="field">
-          <label for="f-email">Email <abbr title="obbligatorio">*</abbr></label>
+          <label for="f-email">Email aziendale <abbr title="obbligatorio">*</abbr></label>
           <input id="f-email" name="email" type="email" autocomplete="email" inputmode="email" required maxlength="254">
           <p class="field__err" id="e-email" role="alert"></p>
         </div>
@@ -503,36 +507,43 @@
           <p class="field__err" id="e-telefono" role="alert"></p>
         </div>
         <div class="field field--full">
-          <label for="f-sito">Sito web <abbr title="obbligatorio">*</abbr></label>
-          <input id="f-sito" name="sito" type="text" inputmode="url" autocomplete="url" placeholder="www.tuosito.it" required maxlength="300">
-          <p class="field__err" id="e-sito" role="alert"></p>
+          <label for="f-target">Sito o app da testare <abbr title="obbligatorio">*</abbr></label>
+          <input id="f-target" name="target" type="text" inputmode="url" autocomplete="url" placeholder="www.tuosito.it" required maxlength="300">
+          <p class="field__err" id="e-target" role="alert"></p>
         </div>
         <div class="field">
-          <label for="f-settore">Settore <abbr title="obbligatorio">*</abbr></label>
+          <label for="f-tipo">Tipo di sistema <abbr title="obbligatorio">*</abbr></label>
           <div class="select">
-            <select id="f-settore" name="settore" required>
+            <select id="f-tipo" name="tipo" required>
               <option value="" selected disabled>Seleziona…</option>
-              {% for (k, label) in sectors %}<option value="{{ k }}">{{ label }}</option>{% endfor %}
+              {% for (k, label) in target_types %}<option value="{{ k }}">{{ label }}</option>{% endfor %}
             </select>
           </div>
-          <p class="field__err" id="e-settore" role="alert"></p>
+          <p class="field__err" id="e-tipo" role="alert"></p>
         </div>
         <div class="field">
-          <label for="f-piano">Piano di interesse</label>
+          <label for="f-servizio">Servizio di interesse</label>
           <div class="select">
-            <select id="f-piano" name="piano">
-              {% for (k, label) in plan_options %}<option value="{{ k }}">{{ label }}</option>{% endfor %}
+            <select id="f-servizio" name="servizio">
+              {% for (k, label) in services %}<option value="{{ k }}">{{ label }}</option>{% endfor %}
             </select>
           </div>
-          <p class="field__err" id="e-piano" role="alert"></p>
+          <p class="field__err" id="e-servizio" role="alert"></p>
         </div>
         <div class="field field--full">
-          <label for="f-messaggio">Cosa deve fare il tuo assistente?</label>
-          <textarea id="f-messaggio" name="messaggio" rows="4" maxlength="2000" placeholder="Es. rispondere su camere e prezzi, raccogliere richieste di preventivo…"></textarea>
+          <label for="f-messaggio">Cosa ti preoccupa di più?</label>
+          <textarea id="f-messaggio" name="messaggio" rows="4" maxlength="2000" placeholder="Es. abbiamo appena rifatto il checkout, gestiamo dati di pazienti, dobbiamo prepararci alla NIS2…"></textarea>
         </div>
         <div class="field field--hp" aria-hidden="true">
           <label for="f-fax">Fax</label>
           <input id="f-fax" name="fax" tabindex="-1" autocomplete="off">
+        </div>
+        <div class="field field--full">
+          <label class="check">
+            <input type="checkbox" name="autorizzazione" id="f-autorizzazione" required>
+            <span>Dichiaro di essere il titolare del sistema indicato o di avere l'autorizzazione del titolare a richiedere il test. So che nessun test inizierà prima della firma dell'autorizzazione scritta. <abbr title="obbligatorio">*</abbr></span>
+          </label>
+          <p class="field__err" id="e-autorizzazione" role="alert"></p>
         </div>
         <div class="field field--full">
           <label class="check">
@@ -554,8 +565,8 @@
       <div class="form__done" data-form-done hidden tabindex="-1">
         <div class="form__done-mark">{% include "partials/mark.html" %}</div>
         <p class="label mono">// RICHIESTA RICEVUTA</p>
-        <h3>Grazie, ci siamo.</h3>
-        <p>Il team CORE829 analizzerà il tuo sito e ti ricontatterà all'indirizzo email che ci hai indicato.</p>
+        <h3>Ricevuto. Ci pensiamo noi.</h3>
+        <p>Il team CORE829 ti ricontatterà all'indirizzo email indicato per definire perimetro, autorizzazione e preventivo.</p>
       </div>
     </form>
   </div>

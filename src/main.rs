@@ -1,4 +1,4 @@
-//! STRIX — landing e servizio richieste.
+//! CORE829 Cybersecurity — landing e servizio richieste di penetration test.
 //!
 //! Un unico binario: template compilati (Askama), asset incorporati (rust-embed),
 //! endpoint per le richieste dei clienti. La dashboard interna CORE829 verrà
@@ -38,7 +38,7 @@ pub struct AppState {
 async fn main() {
     fmt()
         .with_env_filter(
-            EnvFilter::try_from_default_env().unwrap_or_else(|_| "strix_web=info,tower_http=warn".into()),
+            EnvFilter::try_from_default_env().unwrap_or_else(|_| "core829_cyber=info,tower_http=warn".into()),
         )
         .init();
 
@@ -63,7 +63,7 @@ async fn main() {
     let listener = tokio::net::TcpListener::bind(addr)
         .await
         .unwrap_or_else(|e| panic!("bind su {addr} fallito: {e}"));
-    tracing::info!("STRIX online su http://{addr} (asset v{})", assets::version());
+    tracing::info!("CORE829 Cybersecurity online su http://{addr} (asset v{})", assets::version());
 
     axum::serve(listener, app.into_make_service_with_connect_info::<SocketAddr>())
         .with_graceful_shutdown(shutdown_signal())

@@ -7,10 +7,8 @@ pub struct Config {
     pub port: u16,
     /// Cartella dove salvare le richieste (`DATA_DIR`, default `./data`).
     pub data_dir: PathBuf,
-    /// URL pubblico del sito, senza slash finale (`SITE_URL`, default `https://strix.ai`).
+    /// URL pubblico del sito, senza slash finale (`SITE_URL`).
     pub site_url: String,
-    /// Dominio mostrato negli esempi di installazione (`WIDGET_DOMAIN`, default `strix.ai`).
-    pub widget_domain: String,
     /// Se `true`, l'IP del client viene letto da `X-Forwarded-For` (solo dietro un proxy fidato).
     pub trust_proxy: bool,
 }
@@ -22,10 +20,9 @@ impl Config {
             port: env("PORT").and_then(|p| p.parse().ok()).unwrap_or(8080),
             data_dir: env("DATA_DIR").map(PathBuf::from).unwrap_or_else(|| "data".into()),
             site_url: env("SITE_URL")
-                .unwrap_or_else(|| "https://strix.ai".into())
+                .unwrap_or_else(|| "https://cybersecurity.core829.net".into())
                 .trim_end_matches('/')
                 .to_owned(),
-            widget_domain: env("WIDGET_DOMAIN").unwrap_or_else(|| "strix.ai".into()),
             trust_proxy: env("TRUST_PROXY").is_some_and(|v| v == "1" || v.eq_ignore_ascii_case("true")),
         }
     }

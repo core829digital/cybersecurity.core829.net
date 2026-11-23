@@ -26,23 +26,22 @@ use uuid::Uuid;
 
 use crate::AppState;
 
-pub const SECTORS: &[(&str, &str)] = &[
-    ("hotel", "Hotel, B&B e turismo"),
-    ("ristorazione", "Ristorante o bar"),
-    ("sanita", "Studio medico o clinica"),
-    ("professionisti", "Studio legale o commercialista"),
+/// Tipi di sistema da testare.
+pub const TARGET_TYPES: &[(&str, &str)] = &[
+    ("sito", "Sito web aziendale"),
     ("ecommerce", "E-commerce"),
-    ("b2b", "Azienda B2B o manifattura"),
-    ("agenzia", "Agenzia web o freelance"),
-    ("altro", "Altro"),
+    ("webapp", "Web app o piattaforma SaaS"),
+    ("api", "API"),
+    ("agenzia", "Siti dei clienti di un'agenzia"),
+    ("altro", "Più sistemi o altro"),
 ];
 
-pub const PLANS: &[(&str, &str)] = &[
+/// Servizi richiedibili.
+pub const SERVICES: &[(&str, &str)] = &[
     ("da-definire", "Non lo so ancora"),
-    ("start", "Start"),
-    ("pro", "Pro"),
-    ("business", "Business"),
-    ("agency", "Agency"),
+    ("checkup", "Check-up"),
+    ("completo", "Pentest completo"),
+    ("continuo", "Protezione continua"),
     ("enterprise", "Enterprise"),
 ];
 
@@ -56,14 +55,18 @@ pub struct RequestInput {
     email: String,
     #[serde(default)]
     telefono: String,
+    /// Indirizzo del sistema da testare.
     #[serde(default)]
-    sito: String,
+    target: String,
     #[serde(default)]
-    settore: String,
+    tipo: String,
     #[serde(default)]
-    piano: String,
+    servizio: String,
     #[serde(default)]
     messaggio: String,
+    /// Dichiarazione: titolare del sistema o autorizzato dal titolare.
+    #[serde(default)]
+    autorizzazione: bool,
     #[serde(default)]
     privacy: bool,
     /// Campo trappola invisibile: se compilato, è un bot.
@@ -84,10 +87,11 @@ struct StoredRequest<'a> {
     azienda: &'a str,
     email: &'a str,
     telefono: &'a str,
-    sito: &'a str,
-    settore: &'a str,
-    piano: &'a str,
+    target: &'a str,
+    tipo: &'a str,
+    servizio: &'a str,
     messaggio: &'a str,
+    authorization_declared: bool,
     privacy_accepted: bool,
 }
 
@@ -106,7 +110,7 @@ fn validate(mut i: RequestInput) -> Result<RequestInput, BTreeMap<&'static str, 
     i.azienda = clean(&i.azienda, 160);
     i.email = clean(&i.email, 254).to_lowercase();
     i.telefono = clean(&i.telefono, 40);
-    i.sito = clean(&i.sito, 300);
+    i.target = clean(&i.target, 300);
     i.messaggio = clean(&i.messaggio, 2000);
 
     let mut errors = BTreeMap::new();
@@ -127,17 +131,23 @@ fn validate(mut i: RequestInput) -> Result<RequestInput, BTreeMap<&'static str, 
     {
         errors.insert("telefono", "Il numero può contenere solo cifre, spazi e +.");
     }
-    if !is_site(&i.sito) {
-        errors.insert("sito", "Inserisci l'indirizzo del sito, es. www.tuosito.it");
+    if !is_site(&i.target) {
+        errors.insert("target", "Inserisci l'indirizzo da testare, es. www.tuosito.it");
     }
-    if !SECTORS.iter().any(|(k, _)| *k == i.settore) {
-        errors.insert("settore", "Seleziona il tuo settore.");
+    if !TARGET_TYPES.iter().any(|(k, _)| *k == i.tipo) {
+        errors.insert("tipo", "Seleziona il tipo di sistema.");
     }
-    if i.piano.is_empty() {
-        i.piano = "da-definire".into();
+    if i.servizio.is_empty() {
+        i.servizio = "da-definire".into();
     }
-    if !PLANS.iter().any(|(k, _)| *k == i.piano) {
-        errors.insert("piano", "Seleziona un piano valido.");
+    if !SERVICES.iter().any(|(k, _)| *k == i.servizio) {
+        errors.insert("servizio", "Seleziona un servizio valido.");
+    }
+    if !i.autorizzazione {
+        errors.insert(
+            "autorizzazione",
+            "Possiamo testare solo sistemi di cui sei titolare o per cui hai l'autorizzazione del titolare.",
+        );
     }
     if !i.privacy {
         errors.insert("privacy", "Per inviare la richiesta serve il consenso all'informativa.");
@@ -300,10 +310,11 @@ pub async fn create(
         azienda: &input.azienda,
         email: &input.email,
         telefono: &input.telefono,
-        sito: &input.sito,
-        settore: &input.settore,
-        piano: &input.piano,
+        target: &input.target,
+        tipo: &input.tipo,
+        servizio: &input.servizio,
         messaggio: &input.messaggio,
+        authorization_declared: input.autorizzazione,
         privacy_accepted: input.privacy,
     };
 
@@ -320,7 +331,7 @@ pub async fn create(
         return server_error();
     }
 
-    tracing::info!(id = %record.id, settore = record.settore, piano = record.piano, "nuova richiesta");
+    tracing::info!(id = %record.id, tipo = record.tipo, servizio = record.servizio, "nuova richiesta");
     accepted()
 }
 
@@ -342,13 +353,14 @@ mod tests {
     fn valid() -> RequestInput {
         RequestInput {
             nome: "Mario Rossi".into(),
-            azienda: "Hotel Belvedere".into(),
+            azienda: "Esempio Shop SRL".into(),
             email: "Mario@Example.it ".into(),
             telefono: "+39 333 123 4567".into(),
-            sito: "https://www.example.it/".into(),
-            settore: "hotel".into(),
-            piano: String::new(),
-            messaggio: "Vorrei rispondere alle domande sulle camere.".into(),
+            target: "https://shop.example.it/".into(),
+            tipo: "ecommerce".into(),
+            servizio: String::new(),
+            messaggio: "Vorremmo testare il checkout prima dei saldi.".into(),
+            autorizzazione: true,
             privacy: true,
             fax: String::new(),
             elapsed_ms: 10_000,
@@ -359,20 +371,22 @@ mod tests {
     fn accepts_valid_input_and_normalizes() {
         let v = validate(valid()).expect("valido");
         assert_eq!(v.email, "mario@example.it");
-        assert_eq!(v.piano, "da-definire");
+        assert_eq!(v.servizio, "da-definire");
     }
 
     #[test]
     fn rejects_missing_fields() {
         let mut i = valid();
         i.email = "non-una-email".into();
-        i.sito = "x".into();
-        i.settore = "boh".into();
+        i.target = "x".into();
+        i.tipo = "boh".into();
+        i.autorizzazione = false;
         i.privacy = false;
         let e = validate(i).unwrap_err();
         assert!(e.contains_key("email"));
-        assert!(e.contains_key("sito"));
-        assert!(e.contains_key("settore"));
+        assert!(e.contains_key("target"));
+        assert!(e.contains_key("tipo"));
+        assert!(e.contains_key("autorizzazione"));
         assert!(e.contains_key("privacy"));
     }
 

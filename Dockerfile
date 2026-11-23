@@ -9,9 +9,9 @@ RUN cargo build --release --locked
 
 # ---- runtime: immagine minima, utente non root ----
 FROM gcr.io/distroless/cc-debian12:nonroot
-COPY --from=build /app/target/release/strix-web /strix-web
+COPY --from=build /app/target/release/core829-cyber /core829-cyber
 ENV PORT=8080 DATA_DIR=/data
 VOLUME ["/data"]
 EXPOSE 8080
 USER nonroot
-ENTRYPOINT ["/strix-web"]
+ENTRYPOINT ["/core829-cyber"]

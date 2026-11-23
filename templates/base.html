@@ -3,21 +3,21 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>{% block title %}STRIX — L'assistente AI per il tuo sito · by CORE829{% endblock %}</title>
-  <meta name="description" content="{% block description %}Strix risponde ai visitatori del tuo sito 24 ore su 24 usando solo i tuoi contenuti, raccoglie i contatti e te li consegna. Configurato da CORE829, dati in UE, conforme AI Act. Richiedilo in 2 minuti.{% endblock %}">
+  <title>{% block title %}Penetration test con AI · CORE829 Cybersecurity{% endblock %}</title>
+  <meta name="description" content="{% block description %}Penetration test del tuo sito, e-commerce o web app con agenti AI: ogni vulnerabilità dimostrata con una prova reale, gravità CVSS e correzione. Solo con autorizzazione scritta. Report in italiano, dati in UE.{% endblock %}">
   <meta name="theme-color" content="#141416">
   <meta name="color-scheme" content="dark">
   <link rel="canonical" href="{{ site_url }}{% block path %}/{% endblock %}">
   <link rel="icon" href="/assets/img/favicon.svg?v={{ v }}" type="image/svg+xml">
   <link rel="preload" href="/assets/fonts/space-grotesk.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/assets/fonts/jetbrains-mono.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="/assets/css/strix.css?v={{ v }}">
+  <link rel="stylesheet" href="/assets/css/core829.css?v={{ v }}">
 
   <meta property="og:type" content="website">
   <meta property="og:locale" content="it_IT">
-  <meta property="og:site_name" content="STRIX by CORE829">
-  <meta property="og:title" content="STRIX — Il tuo sito risponde. Anche alle 3 di notte.">
-  <meta property="og:description" content="L'assistente AI che conosce la tua attività. Tu fai la richiesta, al resto pensa CORE829.">
+  <meta property="og:site_name" content="CORE829 Cybersecurity">
+  <meta property="og:title" content="Attacchiamo il tuo sito. Prima che lo faccia qualcun altro.">
+  <meta property="og:description" content="Penetration test con agenti AI: ogni vulnerabilità dimostrata, con la correzione pronta. Un servizio CORE829.">
   <meta property="og:url" content="{{ site_url }}/">
   <meta property="og:image" content="{{ site_url }}/assets/img/og.png">
   <meta property="og:image:width" content="1200">
@@ -25,7 +25,7 @@
   <meta name="twitter:card" content="summary_large_image">
   {% block head %}{% endblock %}
 
-  <script src="/assets/js/strix.js?v={{ v }}" type="module"></script>
+  <script src="/assets/js/core829.js?v={{ v }}" type="module"></script>
 </head>
 <body class="{% block body_class %}{% endblock %}">
   <a class="skip" href="#main">Vai al contenuto</a>
@@ -35,10 +35,10 @@
 
   <header class="nav" data-nav>
     <div class="nav__inner wrap">
-      <a class="brand" href="/" aria-label="STRIX by CORE829, torna all'inizio">
+      <a class="brand" href="/" aria-label="CORE829 Cybersecurity, torna all'inizio">
         <span class="brand__mark">{% include "partials/mark.html" %}</span>
-        <span class="brand__word">STRIX</span>
-        <span class="brand__by">by CORE829</span>
+        <span class="brand__word">CORE829</span>
+        <span class="brand__by">Cybersecurity</span>
       </a>
       {% block nav %}{% endblock %}
     </div>
@@ -50,21 +50,21 @@
 
   <footer class="footer">
     <div class="wrap">
-      <div class="footer__giant" aria-hidden="true">STRIX</div>
+      <div class="footer__giant" aria-hidden="true">SECURE</div>
       <div class="footer__grid">
         <div class="footer__brand">
-          <a class="brand brand--lg" href="/" aria-label="STRIX by CORE829">
+          <a class="brand brand--lg" href="/" aria-label="CORE829 Cybersecurity">
             <span class="brand__mark">{% include "partials/mark.html" %}</span>
-            <span class="brand__word">STRIX</span>
+            <span class="brand__word">CORE829</span>
           </a>
-          <p>L'assistente AI per i siti delle aziende italiane ed europee. Un prodotto CORE829.</p>
+          <p>Penetration test con agenti AI per siti, e-commerce e web app di aziende italiane ed europee.</p>
           <p class="footer__payoff">Complexity made simple.</p>
         </div>
-        <nav class="footer__col" aria-label="Prodotto">
-          <h2>Prodotto</h2>
+        <nav class="footer__col" aria-label="Servizio">
+          <h2>Servizio</h2>
           <a href="/#come-funziona">Come funziona</a>
-          <a href="/#funzioni">Funzioni</a>
-          <a href="/#settori">Settori</a>
+          <a href="/#cosa-trova">Cosa trova</a>
+          <a href="/#report">Il report</a>
           <a href="/#prezzi">Prezzi</a>
           <a href="/#faq">Domande frequenti</a>
         </nav>
@@ -76,13 +76,13 @@
         <div class="footer__col">
           <h2>Contatti</h2>
           <a href="mailto:hello@core829.net">hello@core829.net</a>
-          <a href="/#richiesta">Richiedi Strix</a>
+          <a href="/#richiesta">Richiedi un test</a>
           <a href="/privacy">Privacy e cookie</a>
         </div>
       </div>
       <div class="footer__bar mono">
         <span>© {{ year }} CORE829 SRL. Tutti i diritti riservati.</span>
-        <span>Nessun cookie di profilazione su questo sito.</span>
+        <span>Testiamo solo sistemi con autorizzazione scritta del titolare.</span>
       </div>
     </div>
   </footer>

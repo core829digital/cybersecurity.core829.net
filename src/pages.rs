@@ -10,87 +10,73 @@ use axum::{
 use crate::{
     AppState, assets,
     config::Config,
-    requests::{PLANS, SECTORS},
+    requests::{SERVICES, TARGET_TYPES},
 };
 
-/// Un piano commerciale mostrato nella sezione prezzi.
+/// Un servizio mostrato nella sezione prezzi.
 pub struct Plan {
     pub id: &'static str,
     pub name: &'static str,
-    pub monthly: u32,
+    /// Prezzo di partenza in euro, già formattato (es. "1.490").
+    pub price: &'static str,
+    /// Unità del prezzo (es. "una tantum", "/mese").
+    pub unit: &'static str,
     pub audience: &'static str,
     pub features: &'static [&'static str],
     pub featured: bool,
 }
 
 impl Plan {
-    /// Prezzo annuale: due mesi gratis.
-    pub fn yearly(&self) -> u32 {
-        self.monthly * 10
-    }
-
-    /// Equivalente mensile del piano annuale, formattato all'italiana (es. "24,17").
-    pub fn yearly_per_month(&self) -> String {
-        let cents = self.yearly() * 100 / 12;
-        format!("{},{:02}", cents / 100, cents % 100)
+    /// Prezzo numerico senza separatori delle migliaia, per i dati strutturati (es. "1490").
+    pub fn price_value(&self) -> String {
+        self.price.replace('.', "")
     }
 }
 
+/// Listino proposto: prezzi "a partire da", IVA esclusa.
 pub const PLANS_INFO: &[Plan] = &[
     Plan {
-        id: "start",
-        name: "Start",
-        monthly: 29,
-        audience: "Micro-imprese, B&B, professionisti",
+        id: "checkup",
+        name: "Check-up",
+        price: "490",
+        unit: "una tantum",
+        audience: "Siti aziendali e piccoli e-commerce",
         features: &[
-            "1 sito",
-            "500 conversazioni AI al mese",
-            "Addestramento su sito e 20 file",
-            "Raccolta contatti via email",
-            "Marchio “Powered by Strix”",
+            "1 sito o web app",
+            "Test dall'esterno (black-box)",
+            "OWASP Top 10 e configurazioni",
+            "Prova di sfruttamento per ogni vulnerabilità",
+            "Report in italiano con le correzioni",
         ],
         featured: false,
     },
     Plan {
-        id: "pro",
-        name: "Pro",
-        monthly: 79,
-        audience: "PMI, ristoranti, hotel, studi",
+        id: "completo",
+        name: "Pentest completo",
+        price: "1.490",
+        unit: "una tantum",
+        audience: "E-commerce, web app e piattaforme SaaS",
         features: &[
-            "3 siti",
-            "2.000 conversazioni AI al mese",
-            "Senza marchio Strix",
-            "Contatti su WhatsApp, email e CRM",
-            "Modelli pronti per il tuo settore",
-            "5 lingue",
+            "Web app e relative API",
+            "Test con utenti autenticati",
+            "Controllo accessi e logica di business",
+            "Revisione del team CORE829",
+            "Report tecnico e sintesi per la direzione",
+            "Retest gratuito dopo le correzioni",
         ],
         featured: true,
     },
     Plan {
-        id: "business",
-        name: "Business",
-        monthly: 199,
-        audience: "E-commerce e aziende B2B",
+        id: "continuo",
+        name: "Protezione continua",
+        price: "390",
+        unit: "/mese",
+        audience: "Team che rilasciano spesso",
         features: &[
-            "10 siti",
-            "6.000 conversazioni AI al mese",
-            "Passaggio a un operatore in diretta",
-            "Integrazioni su misura",
-            "Resoconto avanzato",
-            "Modello AI superiore",
-        ],
-        featured: false,
-    },
-    Plan {
-        id: "agency",
-        name: "Agency",
-        monthly: 349,
-        audience: "Agenzie web e rivenditori",
-        features: &[
-            "25 siti con il tuo marchio",
-            "10.000 conversazioni condivise",
-            "Resoconto mensile per ogni cliente",
-            "Margine sulla rivendita",
+            "Test a ogni rilascio importante",
+            "Integrazione con GitHub o GitLab",
+            "Nuove vulnerabilità segnalate subito",
+            "Resoconto mensile dei rischi",
             "Referente CORE829 dedicato",
         ],
         featured: false,
@@ -102,11 +88,10 @@ pub const PLANS_INFO: &[Plan] = &[
 struct IndexTpl<'a> {
     v: &'a str,
     site_url: &'a str,
-    widget_domain: &'a str,
     year: i32,
     plans: &'a [Plan],
-    sectors: &'a [(&'a str, &'a str)],
-    plan_options: &'a [(&'a str, &'a str)],
+    target_types: &'a [(&'a str, &'a str)],
+    services: &'a [(&'a str, &'a str)],
 }
 
 #[derive(Template)]
@@ -143,11 +128,10 @@ impl Pages {
             index: IndexTpl {
                 v,
                 site_url,
-                widget_domain: &config.widget_domain,
                 year,
                 plans: PLANS_INFO,
-                sectors: SECTORS,
-                plan_options: PLANS,
+                target_types: TARGET_TYPES,
+                services: SERVICES,
             }
             .render()?,
             privacy: PrivacyTpl { v, site_url, year }.render()?,
