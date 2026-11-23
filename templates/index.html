@@ -1,0 +1,563 @@
+{% extends "base.html" %}
+
+{% block head %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "{{ site_url }}/#org",
+      "name": "CORE829 SRL",
+      "url": "https://core829.net",
+      "email": "hello@core829.net",
+      "address": { "@type": "PostalAddress", "streetAddress": "Str. Mihai Eminescu 10", "addressLocality": "Roman", "addressCountry": "RO" }
+    },
+    {
+      "@type": "SoftwareApplication",
+      "name": "STRIX",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "Web",
+      "url": "{{ site_url }}/",
+      "description": "Assistente AI per siti web: risponde ai visitatori usando solo i contenuti dell'azienda, raccoglie i contatti, conforme GDPR e AI Act.",
+      "publisher": { "@id": "{{ site_url }}/#org" },
+      "offers": [{% for p in plans %}
+        { "@type": "Offer", "name": "{{ p.name }}", "price": "{{ p.monthly }}", "priceCurrency": "EUR" }{% if !loop.last %},{% endif %}{% endfor %}
+      ]
+    }
+  ]
+}
+</script>
+{% endblock %}
+
+{% block nav %}
+<nav class="nav__links" id="menu" aria-label="Sezioni" data-menu>
+  <a href="#come-funziona">Come funziona</a>
+  <a href="#funzioni">Funzioni</a>
+  <a href="#settori">Settori</a>
+  <a href="#prezzi">Prezzi</a>
+  <a href="#faq">FAQ</a>
+  <a class="btn btn--sm btn--primary nav__cta" href="#richiesta"><span>Richiedi Strix</span></a>
+</nav>
+<button class="nav__toggle" type="button" aria-controls="menu" aria-expanded="false" data-menu-toggle>
+  <span class="sr-only">Apri il menu</span><i></i><i></i>
+</button>
+{% endblock %}
+
+{% block main %}
+<!-- ============================== HERO ============================== -->
+<section class="hero" id="top" aria-labelledby="hero-title">
+  <canvas class="hero__canvas" data-constellation aria-hidden="true"></canvas>
+  <div class="hero__floor" aria-hidden="true"><div class="hero__grid"></div></div>
+  <div class="hero__glow" aria-hidden="true"></div>
+
+  <div class="wrap hero__inner">
+    <div class="hero__copy">
+      <p class="hud reveal">
+        <span class="hud__dot" aria-hidden="true"></span>
+        <span>SYS://STRIX</span><span class="hud__sep" aria-hidden="true">/</span>
+        <span>ORA LOCALE <time data-clock>--:--</time></span><span class="hud__sep" aria-hidden="true">/</span>
+        <span class="hud__ok">ONLINE</span>
+      </p>
+      <h1 class="hero__title" id="hero-title" data-scramble>
+        Il tuo sito risponde.<br><span class="accent">Anche alle 3&nbsp;di&nbsp;notte.</span>
+      </h1>
+      <p class="hero__lead reveal">
+        Strix è l'assistente AI che conosce la tua attività: risponde ai clienti usando
+        <strong>solo i tuoi contenuti</strong>, raccoglie i contatti e te li consegna.
+        Tu fai la richiesta, al resto pensa <strong>CORE829</strong>.
+      </p>
+      <div class="hero__cta reveal">
+        <a class="btn btn--primary" href="#richiesta" data-magnetic><span>Richiedi Strix</span><i class="btn__arrow" aria-hidden="true">→</i></a>
+        <a class="btn btn--ghost" href="#come-funziona"><span>Come funziona</span></a>
+      </div>
+      <ul class="hero__trust mono reveal" aria-label="Garanzie">
+        <li>Dati in UE</li>
+        <li>Conforme AI Act</li>
+        <li>Zero cookie di profilazione</li>
+        <li>Prezzi in euro</li>
+      </ul>
+    </div>
+
+    <div class="hero__demo reveal">
+      <div class="demo-frame">
+        <span class="corner corner--tl" aria-hidden="true"></span><span class="corner corner--tr" aria-hidden="true"></span>
+        <span class="corner corner--bl" aria-hidden="true"></span><span class="corner corner--br" aria-hidden="true"></span>
+        <div class="widget" data-chat="hotel" data-autoplay>
+          <div class="widget__head">
+            <span class="widget__avatar">{% include "partials/mark.html" %}</span>
+            <div class="widget__who"><strong data-chat-name>Hotel Belvedere</strong><small><i class="dot" aria-hidden="true"></i> Assistente online</small></div>
+            <span class="widget__tag mono">DEMO</span>
+          </div>
+          <p class="widget__notice">Stai parlando con un assistente AI</p>
+          <div class="widget__log" data-chat-log aria-hidden="true"></div>
+          <div class="widget__input" aria-hidden="true"><span data-chat-input class="is-placeholder">Scrivi un messaggio…</span><b>↵</b></div>
+          <p class="widget__foot mono">Powered by STRIX · CORE829</p>
+          <p class="sr-only">Esempio animato: un visitatore chiede a Strix disponibilità e parcheggio, Strix risponde citando le pagine del sito e raccoglie l'email.</p>
+        </div>
+      </div>
+      <div class="chip chip--a mono" aria-hidden="true"><b>1,2 s</b> prima risposta</div>
+      <div class="chip chip--b mono" aria-hidden="true"><b>FONTE</b> listino-2026.pdf</div>
+      <div class="chip chip--c mono" aria-hidden="true"><b>✓</b> contatto inviato</div>
+    </div>
+  </div>
+
+  <a class="hero__scroll mono" href="#valore" aria-label="Scorri alla sezione successiva"><span>SCROLL</span><i aria-hidden="true"></i></a>
+</section>
+
+<!-- ============================== MARQUEE ============================== -->
+<div class="marquee" aria-hidden="true">
+  <div class="marquee__track">
+    {% for _ in 0..2 %}
+    <span>Hotel &amp; B&amp;B</span><i>{% include "partials/mark.html" %}</i>
+    <span>Ristoranti</span><i>{% include "partials/mark.html" %}</i>
+    <span>Studi medici</span><i>{% include "partials/mark.html" %}</i>
+    <span>Studi legali</span><i>{% include "partials/mark.html" %}</i>
+    <span>Commercialisti</span><i>{% include "partials/mark.html" %}</i>
+    <span>E-commerce</span><i>{% include "partials/mark.html" %}</i>
+    <span>Aziende B2B</span><i>{% include "partials/mark.html" %}</i>
+    <span>Agenzie web</span><i>{% include "partials/mark.html" %}</i>
+    {% endfor %}
+  </div>
+</div>
+
+<!-- ============================== VALORE ============================== -->
+<section class="section value" id="valore" aria-labelledby="value-title">
+  <div class="wrap">
+    <p class="label mono reveal" data-scramble>// 01 — Il problema</p>
+    <h2 class="display reveal" id="value-title">
+      Ogni domanda senza risposta è un cliente che <span class="strike">aspetta</span> <span class="accent">va dal concorrente</span>.
+    </h2>
+    <div class="stats">
+      <article class="stat card reveal" data-spotlight>
+        <p class="stat__num"><span data-count="24">24</span><small>/7</small></p>
+        <h3>Sempre acceso</h3>
+        <p>Risponde la notte, nei weekend e nei festivi, quando il tuo ufficio è chiuso.</p>
+      </article>
+      <article class="stat card reveal" data-spotlight>
+        <p class="stat__num"><small>&lt;</small><span data-count="1.5" data-decimals="1">1,5</span><small>s</small></p>
+        <h3>Risposte immediate</h3>
+        <p>La prima parola arriva in meno di un secondo e mezzo, il testo scorre in tempo reale.</p>
+      </article>
+      <article class="stat card reveal" data-spotlight>
+        <p class="stat__num"><span data-count="5">5</span><small>lingue</small></p>
+        <h3>Parla con tutti</h3>
+        <p>Italiano, inglese, tedesco, francese e spagnolo: risponde nella lingua del visitatore.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== COME FUNZIONA ============================== -->
+<section class="section how" id="come-funziona" aria-labelledby="how-title">
+  <div class="wrap">
+    <div class="section__head">
+      <p class="label mono reveal" data-scramble>// 02 — Come funziona</p>
+      <h2 class="display reveal" id="how-title">Tu fai una richiesta.<br><span class="accent">Noi facciamo il resto.</span></h2>
+      <p class="section__lead reveal">Nessun pannello da imparare, nessun testo da copiare. Il team CORE829 configura, addestra e mantiene il tuo assistente.</p>
+    </div>
+
+    <ol class="steps" data-steps>
+      <li class="step reveal">
+        <span class="step__num mono">01</span>
+        <div class="step__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 3h10l4 4v14H5z"/><path d="M14 3v5h5M8 12h8M8 16h5"/></svg></div>
+        <h3>Richiesta</h3>
+        <p>Compili il modulo in due minuti: il tuo sito, il settore e cosa deve fare l'assistente.</p>
+      </li>
+      <li class="step reveal">
+        <span class="step__num mono">02</span>
+        <div class="step__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3 3 8l9 5 9-5z"/><path d="m3 13 9 5 9-5M3 17.5 12 22l9-4.5"/></svg></div>
+        <h3>Addestramento</h3>
+        <p>Addestriamo Strix sulle pagine del tuo sito, sui PDF, sui listini e sulle FAQ. Ti mostriamo un'anteprima prima di andare online.</p>
+      </li>
+      <li class="step reveal">
+        <span class="step__num mono">03</span>
+        <div class="step__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m8 7-5 5 5 5M16 7l5 5-5 5M14 4l-4 16"/></svg></div>
+        <h3>Installazione</h3>
+        <p>Una riga di codice, il plugin WordPress o un link alla chat ospitata. Se preferisci, la installiamo noi.</p>
+      </li>
+      <li class="step reveal">
+        <span class="step__num mono">04</span>
+        <div class="step__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M2 12h4l3-8 6 16 3-8h4"/></svg></div>
+        <h3>Online</h3>
+        <p>Strix risponde e raccoglie contatti. Ogni mese ricevi un resoconto: domande, contatti, ore risparmiate.</p>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<!-- ============================== INSTALLAZIONE ============================== -->
+<section class="section install" aria-labelledby="install-title">
+  <div class="wrap install__grid">
+    <div class="install__copy">
+      <p class="label mono reveal" data-scramble>// 03 — Installazione</p>
+      <h2 class="display reveal" id="install-title">Funziona su qualsiasi sito.<br><span class="accent">Anche quelli vecchi.</span></h2>
+      <p class="section__lead reveal">Il widget gira nel browser del visitatore, non sul tuo server: basta poterlo inserire nella pagina. Dove non si può toccare il codice, usiamo un link alla chat ospitata da noi.</p>
+      <ul class="platforms reveal" aria-label="Piattaforme compatibili">
+        <li>WordPress</li><li>Shopify</li><li>Wix</li><li>Squarespace</li><li>Joomla</li><li>Drupal</li><li>HTML / PHP</li><li>Siti datati</li>
+      </ul>
+    </div>
+
+    <div class="terminal reveal" data-terminal>
+      <div class="terminal__bar">
+        <span class="terminal__dots" aria-hidden="true"><i></i><i></i><i></i></span>
+        <div class="terminal__tabs" role="tablist" aria-label="Metodo di installazione">
+          <button type="button" role="tab" aria-selected="true" data-tab="script">Script</button>
+          <button type="button" role="tab" aria-selected="false" data-tab="wordpress">WordPress</button>
+          <button type="button" role="tab" aria-selected="false" data-tab="link">Link</button>
+        </div>
+      </div>
+      <div class="terminal__body mono">
+        <p class="terminal__hint" data-term-hint>Incolla prima di &lt;/body&gt;</p>
+        <pre class="terminal__code" tabindex="0"><code data-term-code></code><span class="caret" aria-hidden="true"></span></pre>
+        <div class="terminal__out" data-term-out aria-live="polite"></div>
+      </div>
+      <button class="terminal__copy mono" type="button" data-term-copy>Copia</button>
+      <div hidden data-term-src="script" data-text="&lt;script src=&quot;https://cdn.{{ widget_domain }}/w.js&quot; data-id=&quot;CORE-8X29&quot; async&gt;&lt;/script&gt;"></div>
+      <div hidden data-term-src="wordpress" data-text="Plugin → Aggiungi nuovo → “Strix”&#10;Codice di attivazione: CORE-8X29"></div>
+      <div hidden data-term-src="link" data-text="https://chat.{{ widget_domain }}/CORE-8X29"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== FUNZIONI ============================== -->
+<section class="section features" id="funzioni" aria-labelledby="features-title">
+  <div class="wrap">
+    <div class="section__head">
+      <p class="label mono reveal" data-scramble>// 04 — Funzioni</p>
+      <h2 class="display reveal" id="features-title">Lavora come il tuo<br><span class="accent">miglior collaboratore.</span></h2>
+    </div>
+
+    <div class="bento">
+      <article class="card bento__a reveal" data-spotlight>
+        <p class="card__kicker mono">Zero invenzioni</p>
+        <h3>Risponde solo con i tuoi contenuti</h3>
+        <p>Pagine del sito, PDF, listini, FAQ. Se un'informazione non c'è, Strix non la inventa: lo dice e raccoglie il contatto.</p>
+        <div class="sources" aria-hidden="true">
+          <span class="mono">camere.html</span><span class="mono">listino-2026.pdf</span><span class="mono">faq.docx</span><span class="mono">menu.pdf</span><span class="mono">spedizioni.html</span>
+        </div>
+        <div class="mini-chat" aria-hidden="true">
+          <p class="mini-chat__q">Consegnate anche a Bolzano?</p>
+          <p class="mini-chat__a">Non ho questa informazione sul sito. Ti metto in contatto con il team: mi lasci la tua email?</p>
+        </div>
+      </article>
+
+      <article class="card bento__b reveal" data-spotlight>
+        <p class="card__kicker mono">Lead</p>
+        <h3>Raccoglie i contatti</h3>
+        <p>Nome, email e telefono arrivano subito dove li vuoi.</p>
+        <div class="lead-card" aria-hidden="true">
+          <p class="mono lead-card__title"><i class="dot"></i> NUOVO CONTATTO</p>
+          <p><strong>Mario Rossi</strong> · camera doppia, 14–16 ago</p>
+          <p class="lead-card__routes mono"><span>Email ✓</span><span>WhatsApp ✓</span><span>CRM ✓</span></p>
+        </div>
+      </article>
+
+      <article class="card bento__c reveal" data-spotlight>
+        <p class="card__kicker mono">Lingue</p>
+        <h3>Parla 5 lingue</h3>
+        <p class="lang mono" aria-hidden="true"><span data-lang-cycle>Ciao</span><i class="caret"></i></p>
+        <p>Risponde nella lingua del visitatore.</p>
+      </article>
+
+      <article class="card bento__d reveal" data-spotlight>
+        <p class="card__kicker mono">Umano</p>
+        <h3>Passa la parola a te</h3>
+        <p>Quando serve una persona, la conversazione passa a te o al tuo staff, con tutto lo storico.</p>
+        <div class="handoff mono" aria-hidden="true"><span>AI</span><i></i><span>OPERATORE</span></div>
+      </article>
+
+      <article class="card bento__e reveal" data-spotlight>
+        <p class="card__kicker mono">Prestazioni</p>
+        <h3>Leggero e invisibile</h3>
+        <p class="weight"><span data-count="40">40</span><small>KB max</small></p>
+        <p>Isolato dal resto della pagina: non rallenta il sito e non ne rompe la grafica.</p>
+      </article>
+
+      <article class="card bento__f reveal" data-spotlight>
+        <p class="card__kicker mono">Resoconto</p>
+        <h3>Ogni mese sai cosa ha fatto</h3>
+        <p>Domande ricevute, contatti raccolti, ore risparmiate e le domande senza risposta da colmare insieme.</p>
+        <div class="bars" aria-hidden="true">
+          <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+        </div>
+        <p class="bars__note mono">Esempio di resoconto</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== CONFORMITÀ ============================== -->
+<section class="section compliance" id="conformita" aria-labelledby="compliance-title">
+  <div class="wrap compliance__grid">
+    <div class="radar reveal" aria-hidden="true">
+      <div class="radar__ring"></div><div class="radar__ring"></div><div class="radar__ring"></div>
+      <div class="radar__sweep"></div>
+      <span class="radar__node mono radar__node--1">GDPR</span>
+      <span class="radar__node mono radar__node--2">AI ACT</span>
+      <span class="radar__node mono radar__node--3">DATI UE</span>
+      <span class="radar__node mono radar__node--4">DPA</span>
+      <div class="radar__core">{% include "partials/mark.html" %}</div>
+    </div>
+    <div>
+      <p class="label mono reveal" data-scramble>// 05 — Conformità</p>
+      <h2 class="display reveal" id="compliance-title">Costruito per le regole europee.<br><span class="accent">Dal primo giorno.</span></h2>
+      <ul class="checks">
+        <li class="reveal"><b>Dati ospitati in UE.</b> Server europei, nessun trasferimento fuori dall'Unione.</li>
+        <li class="reveal"><b>Avviso AI Act sempre attivo.</b> Il visitatore sa che sta parlando con un'AI, come richiede l'art. 50.</li>
+        <li class="reveal"><b>DPA in italiano.</b> Firmiamo la nomina a responsabile del trattamento con ogni cliente.</li>
+        <li class="reveal"><b>Nessun addestramento sui tuoi dati.</b> I fornitori AI non usano le conversazioni per allenare i modelli.</li>
+        <li class="reveal"><b>Cancellazione automatica.</b> Le conversazioni non restano archiviate per sempre.</li>
+        <li class="reveal"><b>Zero cookie di profilazione.</b> Non devi modificare il banner dei cookie del tuo sito.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== SETTORI ============================== -->
+<section class="section sectors" id="settori" aria-labelledby="sectors-title">
+  <div class="wrap">
+    <div class="section__head">
+      <p class="label mono reveal" data-scramble>// 06 — Settori</p>
+      <h2 class="display reveal" id="sectors-title">Pronto per il tuo settore.<br><span class="accent">Utile dal primo giorno.</span></h2>
+      <p class="section__lead reveal">Partiamo da configurazioni già pensate per la tua attività, con le domande tipiche già previste. Scegli un settore e guarda Strix al lavoro.</p>
+    </div>
+
+    <div class="sectors__grid">
+      <div class="sectors__tabs reveal" role="tablist" aria-label="Scegli un settore" data-sector-tabs>
+        <button type="button" role="tab" aria-selected="true" data-sector="hotel"><span class="mono">01</span> Hotel e B&amp;B<small>Disponibilità, servizi, check-in, prenotazioni</small></button>
+        <button type="button" role="tab" aria-selected="false" data-sector="ristorante"><span class="mono">02</span> Ristoranti<small>Menù, allergeni, orari, tavoli</small></button>
+        <button type="button" role="tab" aria-selected="false" data-sector="medico"><span class="mono">03</span> Studi medici<small>Prestazioni, costi, appuntamenti</small></button>
+        <button type="button" role="tab" aria-selected="false" data-sector="ecommerce"><span class="mono">04</span> E-commerce<small>Spedizioni, resi, prodotti</small></button>
+        <button type="button" role="tab" aria-selected="false" data-sector="commercialista"><span class="mono">05</span> Commercialisti<small>Servizi, scadenze, prima consulenza</small></button>
+      </div>
+
+      <div class="sectors__demo reveal">
+        <div class="demo-frame">
+          <span class="corner corner--tl" aria-hidden="true"></span><span class="corner corner--tr" aria-hidden="true"></span>
+          <span class="corner corner--bl" aria-hidden="true"></span><span class="corner corner--br" aria-hidden="true"></span>
+          <div class="widget" data-chat="hotel" data-sector-widget>
+            <div class="widget__head">
+              <span class="widget__avatar">{% include "partials/mark.html" %}</span>
+              <div class="widget__who"><strong data-chat-name>Hotel Belvedere</strong><small><i class="dot" aria-hidden="true"></i> Assistente online</small></div>
+              <span class="widget__tag mono">DEMO</span>
+            </div>
+            <p class="widget__notice">Stai parlando con un assistente AI</p>
+            <div class="widget__log" data-chat-log aria-hidden="true"></div>
+            <div class="widget__input" aria-hidden="true"><span data-chat-input class="is-placeholder">Scrivi un messaggio…</span><b>↵</b></div>
+            <p class="widget__foot mono">Powered by STRIX · CORE829</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== PREZZI ============================== -->
+<section class="section pricing" id="prezzi" aria-labelledby="pricing-title">
+  <div class="wrap">
+    <div class="section__head section__head--center">
+      <p class="label mono reveal" data-scramble>// 07 — Prezzi</p>
+      <h2 class="display reveal" id="pricing-title">Prezzi chiari, in euro.<br><span class="accent">Nessuna sorpresa.</span></h2>
+      <p class="section__lead reveal">Canone fisso con conversazioni incluse. Nessun costo per operatore, nessun costo per risposta.</p>
+      <div class="billing reveal" role="group" aria-label="Periodo di fatturazione" data-billing>
+        <button type="button" aria-pressed="true" data-period="monthly">Mensile</button>
+        <button type="button" aria-pressed="false" data-period="yearly">Annuale <em>2 mesi gratis</em></button>
+        <span class="billing__thumb" aria-hidden="true"></span>
+      </div>
+    </div>
+
+    <div class="plans">
+      {% for p in plans %}
+      <article class="plan card reveal{% if p.featured %} plan--featured{% endif %}" data-spotlight>
+        {% if p.featured %}<p class="plan__badge mono">Il più scelto</p>{% endif %}
+        <h3 class="plan__name mono">{{ p.name }}</h3>
+        <p class="plan__for">{{ p.audience }}</p>
+        <p class="plan__price">
+          <span class="plan__num" data-price data-monthly="{{ p.monthly }}" data-yearly="{{ p.yearly() }}">{{ p.monthly }}</span><span class="plan__cur">€</span>
+          <span class="plan__per" data-per>/mese</span>
+        </p>
+        <p class="plan__note mono" data-yearly-note="equivale a {{ p.yearly_per_month() }} €/mese" data-monthly-note="IVA esclusa">IVA esclusa</p>
+        <ul class="plan__list">
+          {% for f in p.features %}<li>{{ f }}</li>{% endfor %}
+        </ul>
+        <a class="btn {% if p.featured %}btn--primary{% else %}btn--line{% endif %} btn--block" href="#richiesta" data-plan-pick="{{ p.id }}"><span>Richiedi {{ p.name }}</span></a>
+      </article>
+      {% endfor %}
+    </div>
+
+    <div class="enterprise card reveal" data-spotlight>
+      <div>
+        <h3 class="mono">Enterprise</h3>
+        <p>Hosting dedicato, accesso unico aziendale (SSO), livelli di servizio garantiti e contratto su misura. Per grandi aziende e pubblica amministrazione.</p>
+      </div>
+      <p class="enterprise__price">da <b>800 €</b>/mese</p>
+      <a class="btn btn--line" href="#richiesta" data-plan-pick="enterprise"><span>Parliamone</span></a>
+    </div>
+
+    <ul class="pricing__notes mono reveal">
+      <li>Prova di 14 giorni</li>
+      <li>Configurazione iniziale a cura di CORE829: 290 € una tantum</li>
+      <li>Conversazioni extra: 15 € ogni 500</li>
+      <li>Sito aggiuntivo: 9 €/mese</li>
+    </ul>
+    <p class="pricing__def reveal">Una <strong>conversazione</strong> è la sessione di un visitatore, con tutti i suoi messaggi, nell'arco di 24 ore.</p>
+  </div>
+</section>
+
+<!-- ============================== AGENZIE ============================== -->
+<section class="section agency" aria-labelledby="agency-title">
+  <div class="wrap">
+    <div class="agency__box reveal">
+      <div class="agency__copy">
+        <p class="label mono">// Partner</p>
+        <h2 class="display display--sm" id="agency-title">Sei un'agenzia web?<br><span class="accent">Rivendi Strix con il tuo marchio.</span></h2>
+        <p>Offri ai tuoi clienti un assistente AI senza sviluppare nulla. Tu mantieni la relazione e il margine, noi pensiamo alla parte tecnica.</p>
+      </div>
+      <ul class="agency__perks mono">
+        <li><b>30–40%</b><span>di margine sulla rivendita</span></li>
+        <li><b>White-label</b><span>col marchio della tua agenzia</span></li>
+        <li><b>0 righe</b><span>di codice da scrivere</span></li>
+      </ul>
+      <a class="btn btn--primary" href="#richiesta" data-plan-pick="agency" data-sector-pick="agenzia"><span>Diventa partner</span><i class="btn__arrow" aria-hidden="true">→</i></a>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== FAQ ============================== -->
+<section class="section faq" id="faq" aria-labelledby="faq-title">
+  <div class="wrap faq__grid">
+    <div>
+      <p class="label mono reveal" data-scramble>// 08 — Domande frequenti</p>
+      <h2 class="display reveal" id="faq-title">Le risposte,<br><span class="accent">prima di chiedere.</span></h2>
+      <p class="section__lead reveal">Non trovi quello che cerchi? Scrivici a <a href="mailto:hello@core829.net">hello@core829.net</a>.</p>
+    </div>
+    <div class="faq__list">
+      <details class="reveal">
+        <summary>Devo saper programmare o gestire un pannello?</summary>
+        <div><p>No. Tu compili la richiesta, il team CORE829 configura, addestra e installa l'assistente. Per qualsiasi modifica basta scriverci.</p></div>
+      </details>
+      <details class="reveal">
+        <summary>Strix può inventare risposte?</summary>
+        <div><p>È progettato per rispondere solo con i contenuti che ci fornisci. Se non trova un'informazione lo dice e raccoglie il contatto del visitatore. Le domande rimaste senza risposta finiscono nel resoconto mensile, così possiamo completare le informazioni.</p></div>
+      </details>
+      <details class="reveal">
+        <summary>Funziona sul mio sito?</summary>
+        <div><p>Sì, su qualsiasi sito in cui si può inserire una riga di codice, con un plugin dedicato per WordPress. Se il tuo sito non permette di toccare il codice, aggiungiamo un link o un pulsante che apre la chat in una pagina ospitata da noi.</p></div>
+      </details>
+      <details class="reveal">
+        <summary>Cosa si intende per “conversazione”?</summary>
+        <div><p>Una conversazione è la sessione di un visitatore, con tutti i suoi messaggi, nell'arco di 24 ore. Contiamo le conversazioni e non i singoli messaggi, così sai sempre cosa stai pagando.</p></div>
+      </details>
+      <details class="reveal">
+        <summary>E se supero le conversazioni incluse?</summary>
+        <div><p>Le conversazioni aggiuntive costano 15 € ogni 500. Se il traffico cresce stabilmente, ti consigliamo il piano più adatto.</p></div>
+      </details>
+      <details class="reveal">
+        <summary>I dati dei miei clienti sono al sicuro?</summary>
+        <div><p>I dati restano su server in UE, firmiamo con te la nomina a responsabile del trattamento (DPA), le conversazioni non vengono usate per addestrare i modelli AI e vengono cancellate automaticamente.</p></div>
+      </details>
+      <details class="reveal">
+        <summary>Devo modificare il banner dei cookie?</summary>
+        <div><p>No. Il widget di Strix non installa cookie di profilazione, quindi non richiede un consenso aggiuntivo.</p></div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== RICHIESTA ============================== -->
+<section class="section request" id="richiesta" aria-labelledby="request-title">
+  <div class="wrap request__grid">
+    <div class="request__copy">
+      <p class="label mono reveal" data-scramble>// 09 — Richiesta</p>
+      <h2 class="display reveal" id="request-title">Attiva Strix<br><span class="accent">sul tuo sito.</span></h2>
+      <p class="section__lead reveal">Compila il modulo: analizziamo il tuo sito e ti ricontattiamo con una proposta. Nessun impegno.</p>
+      <ol class="next reveal">
+        <li><span class="mono">01</span><p><b>Analizziamo il tuo sito</b> e i contenuti da cui l'assistente imparerà.</p></li>
+        <li><span class="mono">02</span><p><b>Ti mostriamo un'anteprima</b> già addestrata sulle tue pagine.</p></li>
+        <li><span class="mono">03</span><p><b>Attiviamo Strix</b> e ti inviamo il primo resoconto dopo 30 giorni.</p></li>
+      </ol>
+    </div>
+
+    <form class="form card reveal" data-request-form action="/api/richieste" method="post" novalidate>
+      <span class="corner corner--tl" aria-hidden="true"></span><span class="corner corner--br" aria-hidden="true"></span>
+      <div class="form__grid">
+        <div class="field">
+          <label for="f-nome">Nome e cognome <abbr title="obbligatorio">*</abbr></label>
+          <input id="f-nome" name="nome" autocomplete="name" required maxlength="120">
+          <p class="field__err" id="e-nome" role="alert"></p>
+        </div>
+        <div class="field">
+          <label for="f-azienda">Azienda <abbr title="obbligatorio">*</abbr></label>
+          <input id="f-azienda" name="azienda" autocomplete="organization" required maxlength="160">
+          <p class="field__err" id="e-azienda" role="alert"></p>
+        </div>
+        <div class="field">
+          <label for="f-email">Email <abbr title="obbligatorio">*</abbr></label>
+          <input id="f-email" name="email" type="email" autocomplete="email" inputmode="email" required maxlength="254">
+          <p class="field__err" id="e-email" role="alert"></p>
+        </div>
+        <div class="field">
+          <label for="f-telefono">Telefono</label>
+          <input id="f-telefono" name="telefono" type="tel" autocomplete="tel" inputmode="tel" maxlength="40">
+          <p class="field__err" id="e-telefono" role="alert"></p>
+        </div>
+        <div class="field field--full">
+          <label for="f-sito">Sito web <abbr title="obbligatorio">*</abbr></label>
+          <input id="f-sito" name="sito" type="text" inputmode="url" autocomplete="url" placeholder="www.tuosito.it" required maxlength="300">
+          <p class="field__err" id="e-sito" role="alert"></p>
+        </div>
+        <div class="field">
+          <label for="f-settore">Settore <abbr title="obbligatorio">*</abbr></label>
+          <div class="select">
+            <select id="f-settore" name="settore" required>
+              <option value="" selected disabled>Seleziona…</option>
+              {% for (k, label) in sectors %}<option value="{{ k }}">{{ label }}</option>{% endfor %}
+            </select>
+          </div>
+          <p class="field__err" id="e-settore" role="alert"></p>
+        </div>
+        <div class="field">
+          <label for="f-piano">Piano di interesse</label>
+          <div class="select">
+            <select id="f-piano" name="piano">
+              {% for (k, label) in plan_options %}<option value="{{ k }}">{{ label }}</option>{% endfor %}
+            </select>
+          </div>
+          <p class="field__err" id="e-piano" role="alert"></p>
+        </div>
+        <div class="field field--full">
+          <label for="f-messaggio">Cosa deve fare il tuo assistente?</label>
+          <textarea id="f-messaggio" name="messaggio" rows="4" maxlength="2000" placeholder="Es. rispondere su camere e prezzi, raccogliere richieste di preventivo…"></textarea>
+        </div>
+        <div class="field field--hp" aria-hidden="true">
+          <label for="f-fax">Fax</label>
+          <input id="f-fax" name="fax" tabindex="-1" autocomplete="off">
+        </div>
+        <div class="field field--full">
+          <label class="check">
+            <input type="checkbox" name="privacy" id="f-privacy" required>
+            <span>Ho letto l'<a href="/privacy" target="_blank" rel="noopener">informativa privacy</a> e acconsento al trattamento dei dati per essere ricontattato. <abbr title="obbligatorio">*</abbr></span>
+          </label>
+          <p class="field__err" id="e-privacy" role="alert"></p>
+        </div>
+      </div>
+
+      <div class="form__foot">
+        <button class="btn btn--primary btn--block" type="submit" data-submit>
+          <span data-submit-label>Invia richiesta</span><i class="btn__arrow" aria-hidden="true">→</i>
+        </button>
+        <p class="form__status" data-form-status role="status" aria-live="polite"></p>
+        <noscript><p class="form__status is-error">Per inviare il modulo serve JavaScript. In alternativa scrivici a <a href="mailto:hello@core829.net">hello@core829.net</a>.</p></noscript>
+      </div>
+
+      <div class="form__done" data-form-done hidden tabindex="-1">
+        <div class="form__done-mark">{% include "partials/mark.html" %}</div>
+        <p class="label mono">// RICHIESTA RICEVUTA</p>
+        <h3>Grazie, ci siamo.</h3>
+        <p>Il team CORE829 analizzerà il tuo sito e ti ricontatterà all'indirizzo email che ci hai indicato.</p>
+      </div>
+    </form>
+  </div>
+</section>
+{% endblock %}
