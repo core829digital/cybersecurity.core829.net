@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block title %}Chi siamo · CORE829 Cyber{% endblock %}
+{% block description %}CORE829 Cyber è la divisione sicurezza di CORE829 SRL, società di sviluppo software, marketing e servizi digitali che lavora con clienti in tutta Europa.{% endblock %}
+
+{% block main %}
+{% let eyebrow = "Chi siamo" %}
+{% let title = "Costruiamo software." %}
+{% let accent = "Per questo sappiamo come si rompe." %}
+{% let lead = "CORE829 Cyber è la divisione sicurezza di CORE829 SRL, società di sviluppo software, marketing e servizi digitali." %}
+{% include "partials/page_head.html" %}
+
+<section class="section section--tight" aria-labelledby="story-title">
+  <div class="wrap story">
+    <div class="story__text">
+      <h2 class="display display--sm reveal" id="story-title">Da chi costruisce<br><span class="accent">a chi mette alla prova.</span></h2>
+      <p class="reveal">CORE829 progetta e sviluppa siti, web app, software su misura, automazioni e server per aziende. Lavoriamo interamente online, con clienti in tutta Europa, e siamo una società registrata in Romania.</p>
+      <p class="reveal">Ogni giorno vediamo da vicino come nascono le vulnerabilità: una scadenza stretta, un controllo fatto solo nel browser, un plugin non aggiornato. CORE829 Cyber nasce per dare alle aziende lo stesso sguardo di un attaccante, con gli agenti AI per la velocità e il nostro team per il giudizio.</p>
+      <p class="reveal">Il nostro sito principale è <a href="{{ c.co.main_site }}">core829.net</a>: lì trovi tutti gli altri servizi del gruppo.</p>
+    </div>
+    <div class="idcard card reveal" role="group" aria-label="Dati aziendali" data-spotlight>
+      <div class="idcard__mark">{% include "partials/mark.html" %}</div>
+      <p class="idcard__name">{{ c.co.legal_name }}</p>
+      <dl class="idcard__list mono">
+        <div><dt>Sede legale</dt><dd>{{ c.co.street }}, {{ c.co.city }}, {{ c.co.country }}</dd></div>
+        <div><dt>CUI / CIF</dt><dd>{{ c.co.cui }}</dd></div>
+        <div><dt>Reg. Com.</dt><dd>{{ c.co.reg_com }}</dd></div>
+        <div><dt>Email</dt><dd><a href="mailto:{{ c.co.email }}">{{ c.co.email }}</a></dd></div>
+        <div><dt>Sito</dt><dd><a href="{{ c.co.main_site }}">core829.net</a></dd></div>
+      </dl>
+    </div>
+  </div>
+</section>
+
+<section class="section" aria-labelledby="values-title">
+  <div class="wrap">
+    <div class="section__head">
+      <p class="label mono reveal" data-scramble>// I nostri valori</p>
+      <h2 class="display reveal" id="values-title">Quattro principi.<br><span class="accent">Anche quando attacchiamo.</span></h2>
+    </div>
+    <div class="values" data-stagger>
+      <article class="value-card card reveal" data-spotlight><span class="mono">01</span><h3>Precisione</h3><p>Una vulnerabilità entra nel report solo se è dimostrata. Niente allarmi gonfiati.</p></article>
+      <article class="value-card card reveal" data-spotlight><span class="mono">02</span><h3>Minimalismo</h3><p>Report chiari, senza gergo inutile: cosa non va, quanto è grave, come si corregge.</p></article>
+      <article class="value-card card reveal" data-spotlight><span class="mono">03</span><h3>Qualità enterprise</h3><p>Metodi e standard internazionali, anche per la piccola impresa.</p></article>
+      <article class="value-card card reveal" data-spotlight><span class="mono">04</span><h3>Trasparenza</h3><p>Prezzi scritti prima, perimetro firmato, nessun test fuori dagli accordi.</p></article>
+    </div>
+  </div>
+</section>
+
+<section class="section section--tight" aria-labelledby="team-title">
+  <div class="wrap">
+    <div class="section__head">
+      <p class="label mono reveal">// Le persone</p>
+      <h2 class="display display--sm reveal" id="team-title">Chi risponde<br><span class="accent">del tuo test.</span></h2>
+    </div>
+    <div class="people" data-stagger>
+      {% for p in c.co.people %}
+      <article class="person card reveal" data-spotlight>
+        <div class="person__avatar mono" aria-hidden="true">{{ p.initials }}</div>
+        <div><h3>{{ p.name }}</h3><p class="mono">{{ p.role }}, {{ c.co.legal_name }}</p></div>
+      </article>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% include "partials/cta.html" %}
+{% endblock %}

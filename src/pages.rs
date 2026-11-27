@@ -1,122 +1,120 @@
-//! Pagine HTML: renderizzate una volta all'avvio e servite dalla memoria.
+//! Pagine HTML: renderizzate e pre-compresse una volta all'avvio, poi servite dalla memoria.
+
+use std::collections::HashMap;
 
 use askama::Template;
 use axum::{
     extract::State,
-    http::{StatusCode, header},
-    response::{Html, IntoResponse, Response},
+    http::{HeaderMap, HeaderValue, StatusCode, Uri},
+    response::{IntoResponse, Redirect, Response},
 };
 
 use crate::{
     AppState, assets,
+    catalog::{FAQ, FaqGroup, PLANS_INFO, Plan},
+    company::{CORE829, Company},
     config::Config,
+    encoded::Encoded,
     requests::{SERVICES, TARGET_TYPES},
 };
 
-/// Un servizio mostrato nella sezione prezzi.
-pub struct Plan {
-    pub id: &'static str,
-    pub name: &'static str,
-    /// Prezzo di partenza in euro, già formattato (es. "1.490").
-    pub price: &'static str,
-    /// Unità del prezzo (es. "una tantum", "/mese").
-    pub unit: &'static str,
-    pub audience: &'static str,
-    pub features: &'static [&'static str],
-    pub featured: bool,
+/// Voce del menu principale.
+pub struct NavItem {
+    pub href: &'static str,
+    pub label: &'static str,
 }
 
-impl Plan {
-    /// Prezzo numerico senza separatori delle migliaia, per i dati strutturati (es. "1490").
-    pub fn price_value(&self) -> String {
-        self.price.replace('.', "")
+pub const NAV: &[NavItem] = &[
+    NavItem { href: "/servizi", label: "Servizi" },
+    NavItem { href: "/metodo", label: "Metodo" },
+    NavItem { href: "/vulnerabilita", label: "Vulnerabilità" },
+    NavItem { href: "/report", label: "Report" },
+    NavItem { href: "/prezzi", label: "Prezzi" },
+    NavItem { href: "/chi-siamo", label: "Chi siamo" },
+];
+
+/// Contesto comune a tutte le pagine.
+pub struct Ctx<'a> {
+    pub v: &'a str,
+    pub site_url: &'a str,
+    pub year: i32,
+    /// Percorso della pagina (es. "/servizi").
+    pub path: &'static str,
+    /// Nome breve della pagina (briciole di pane).
+    pub name: &'static str,
+    pub nav: &'static [NavItem],
+    pub co: &'static Company,
+    pub plans: &'static [Plan],
+    pub target_types: &'static [(&'static str, &'static str)],
+    pub services: &'static [(&'static str, &'static str)],
+    pub faq: &'static [FaqGroup],
+}
+
+impl Ctx<'_> {
+    /// `true` se la voce di menu corrisponde alla pagina corrente.
+    pub fn is_active(&self, href: &str) -> bool {
+        self.path == href
+    }
+
+    /// Dati strutturati FAQPage, già serializzati e sicuri dentro `<script>`.
+    pub fn faq_jsonld(&self) -> String {
+        let entities: Vec<_> = self
+            .faq
+            .iter()
+            .flat_map(|g| g.items.iter())
+            .map(|(q, a)| {
+                serde_json::json!({
+                    "@type": "Question",
+                    "name": q,
+                    "acceptedAnswer": { "@type": "Answer", "text": a }
+                })
+            })
+            .collect();
+        let json = serde_json::json!({ "@type": "FAQPage", "mainEntity": entities });
+        json.to_string().replace("</", "<\\/")
     }
 }
 
-/// Listino proposto: prezzi "a partire da", IVA esclusa.
-pub const PLANS_INFO: &[Plan] = &[
-    Plan {
-        id: "checkup",
-        name: "Check-up",
-        price: "490",
-        unit: "una tantum",
-        audience: "Siti aziendali e piccoli e-commerce",
-        features: &[
-            "1 sito o web app",
-            "Test dall'esterno (black-box)",
-            "OWASP Top 10 e configurazioni",
-            "Prova di sfruttamento per ogni vulnerabilità",
-            "Report in italiano con le correzioni",
-        ],
-        featured: false,
-    },
-    Plan {
-        id: "completo",
-        name: "Pentest completo",
-        price: "1.490",
-        unit: "una tantum",
-        audience: "E-commerce, web app e piattaforme SaaS",
-        features: &[
-            "Web app e relative API",
-            "Test con utenti autenticati",
-            "Controllo accessi e logica di business",
-            "Revisione del team CORE829",
-            "Report tecnico e sintesi per la direzione",
-            "Retest gratuito dopo le correzioni",
-        ],
-        featured: true,
-    },
-    Plan {
-        id: "continuo",
-        name: "Protezione continua",
-        price: "390",
-        unit: "/mese",
-        audience: "Team che rilasciano spesso",
-        features: &[
-            "Test a ogni rilascio importante",
-            "Integrazione con GitHub o GitLab",
-            "Nuove vulnerabilità segnalate subito",
-            "Resoconto mensile dei rischi",
-            "Referente CORE829 dedicato",
-        ],
-        featured: false,
-    },
-];
+macro_rules! pages {
+    ($($ty:ident => $file:literal, $route:literal, $name:literal, $prio:literal;)*) => {
+        $(
+            #[derive(Template)]
+            #[template(path = $file)]
+            struct $ty<'a> { c: &'a Ctx<'a> }
+        )*
 
-#[derive(Template)]
-#[template(path = "index.html")]
-struct IndexTpl<'a> {
-    v: &'a str,
-    site_url: &'a str,
-    year: i32,
-    plans: &'a [Plan],
-    target_types: &'a [(&'a str, &'a str)],
-    services: &'a [(&'a str, &'a str)],
+        /// (percorso, nome, priorità sitemap, renderer)
+        type Render = fn(&Ctx) -> askama::Result<String>;
+        const ROUTES: &[(&str, &str, &str, Render)] = &[
+            $( ($route, $name, $prio, |c| $ty { c }.render()), )*
+        ];
+    };
 }
 
-#[derive(Template)]
-#[template(path = "privacy.html")]
-struct PrivacyTpl<'a> {
-    v: &'a str,
-    site_url: &'a str,
-    year: i32,
+pages! {
+    Home => "index.html", "/", "Home", "1.0";
+    Servizi => "servizi.html", "/servizi", "Servizi", "0.9";
+    Metodo => "metodo.html", "/metodo", "Metodo", "0.8";
+    Vulnerabilita => "vulnerabilita.html", "/vulnerabilita", "Vulnerabilità", "0.8";
+    Report => "report.html", "/report", "Report", "0.7";
+    Prezzi => "prezzi.html", "/prezzi", "Prezzi", "0.9";
+    Conformita => "conformita.html", "/conformita", "Conformità e regole", "0.7";
+    Faq => "faq.html", "/faq", "Domande frequenti", "0.6";
+    ChiSiamo => "chi-siamo.html", "/chi-siamo", "Chi siamo", "0.6";
+    Contatti => "contatti.html", "/contatti", "Contatti", "0.9";
+    Privacy => "privacy.html", "/privacy", "Privacy e cookie", "0.3";
+    NotFound => "404.html", "/404", "Pagina non trovata", "0";
 }
 
-#[derive(Template)]
-#[template(path = "404.html")]
-struct NotFoundTpl<'a> {
-    v: &'a str,
-    site_url: &'a str,
-    year: i32,
-}
+const HTML: &str = "text/html; charset=utf-8";
+const HTML_CACHE: &str = "public, no-cache";
 
-/// Pagine già renderizzate.
+/// Pagine già renderizzate e compresse.
 pub struct Pages {
-    index: String,
-    privacy: String,
-    not_found: String,
-    robots: String,
-    sitemap: String,
+    by_path: HashMap<&'static str, Encoded>,
+    not_found: Encoded,
+    robots: Encoded,
+    sitemap: Encoded,
 }
 
 impl Pages {
@@ -124,54 +122,89 @@ impl Pages {
         let v = assets::version();
         let year = time::OffsetDateTime::now_utc().year();
         let site_url = config.site_url.as_str();
-        Ok(Self {
-            index: IndexTpl {
+        let mut by_path = HashMap::new();
+        let mut not_found = None;
+        let mut urls = String::new();
+
+        for (path, name, prio, render) in ROUTES {
+            let ctx = Ctx {
                 v,
                 site_url,
                 year,
+                path,
+                name,
+                nav: NAV,
+                co: &CORE829,
                 plans: PLANS_INFO,
                 target_types: TARGET_TYPES,
                 services: SERVICES,
+                faq: FAQ,
+            };
+            let html = Encoded::new(render(&ctx)?.into_bytes(), HTML, HTML_CACHE, true);
+            if *path == "/404" {
+                not_found = Some(html);
+                continue;
             }
-            .render()?,
-            privacy: PrivacyTpl { v, site_url, year }.render()?,
-            not_found: NotFoundTpl { v, site_url, year }.render()?,
-            robots: format!("User-agent: *\nAllow: /\nDisallow: /api/\n\nSitemap: {site_url}/sitemap.xml\n"),
-            sitemap: format!(
-                "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\
-                 <urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\n\
-                 <url><loc>{site_url}/</loc><priority>1.0</priority></url>\n\
-                 <url><loc>{site_url}/privacy</loc><priority>0.3</priority></url>\n\
-                 </urlset>\n"
-            ),
+            urls.push_str(&format!(
+                "  <url><loc>{site_url}{path}</loc><priority>{prio}</priority></url>\n"
+            ));
+            by_path.insert(*path, html);
+        }
+
+        let robots = format!("User-agent: *\nAllow: /\nDisallow: /api/\n\nSitemap: {site_url}/sitemap.xml\n");
+        let sitemap = format!(
+            "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\
+             <urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\n{urls}</urlset>\n"
+        );
+        Ok(Self {
+            by_path,
+            not_found: not_found.expect("pagina 404 presente in ROUTES"),
+            robots: Encoded::new(robots.into_bytes(), "text/plain; charset=utf-8", "public, max-age=3600", false),
+            sitemap: Encoded::new(sitemap.into_bytes(), "application/xml; charset=utf-8", "public, max-age=3600", true),
         })
+    }
+
+    pub fn count(&self) -> usize {
+        self.by_path.len()
     }
 }
 
-fn html(body: &str) -> Response {
-    (
-        [(header::CACHE_CONTROL, "public, max-age=300")],
-        Html(body.to_owned()),
-    )
-        .into_response()
+/// Serve la pagina corrispondente al percorso, oppure la 404.
+pub async fn serve(State(s): State<AppState>, uri: Uri, headers: HeaderMap) -> Response {
+    let path = uri.path();
+    if path.len() > 1 && path.ends_with('/') {
+        return Redirect::permanent(path.trim_end_matches('/')).into_response();
+    }
+    let mut res = match s.pages.by_path.get(path) {
+        Some(p) => p.respond(&headers, StatusCode::OK),
+        None => s.pages.not_found.respond(&headers, StatusCode::NOT_FOUND),
+    };
+    res.headers_mut().insert(
+        "speculation-rules",
+        HeaderValue::from_static("\"/assets/speculation.json\""),
+    );
+    res
 }
 
-pub async fn index(State(s): State<AppState>) -> Response {
-    html(&s.pages.index)
+pub async fn robots(State(s): State<AppState>, headers: HeaderMap) -> Response {
+    s.pages.robots.respond(&headers, StatusCode::OK)
 }
 
-pub async fn privacy(State(s): State<AppState>) -> Response {
-    html(&s.pages.privacy)
+pub async fn sitemap(State(s): State<AppState>, headers: HeaderMap) -> Response {
+    s.pages.sitemap.respond(&headers, StatusCode::OK)
 }
 
-pub async fn not_found(State(s): State<AppState>) -> Response {
-    (StatusCode::NOT_FOUND, Html(s.pages.not_found.clone())).into_response()
-}
+#[cfg(test)]
+mod tests {
+    use super::*;
 
-pub async fn robots(State(s): State<AppState>) -> Response {
-    ([(header::CONTENT_TYPE, "text/plain; charset=utf-8")], s.pages.robots.clone()).into_response()
-}
-
-pub async fn sitemap(State(s): State<AppState>) -> Response {
-    ([(header::CONTENT_TYPE, "application/xml; charset=utf-8")], s.pages.sitemap.clone()).into_response()
+    #[test]
+    fn all_pages_render() {
+        let cfg = Config::from_env();
+        let pages = Pages::render(&cfg).expect("rendering");
+        assert_eq!(pages.count(), ROUTES.len() - 1);
+        for (path, ..) in ROUTES.iter().filter(|r| r.0 != "/404") {
+            assert!(pages.by_path.contains_key(path), "manca {path}");
+        }
+    }
 }

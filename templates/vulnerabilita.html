@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block title %}Quali vulnerabilità troviamo · CORE829 Cyber{% endblock %}
+{% block description %}Controllo degli accessi, iniezioni, XSS, SSRF, logica di business, sessioni, API e configurazioni: le vulnerabilità che i nostri agenti AI cercano e dimostrano, con esempi reali per settore.{% endblock %}
+
+{% block main %}
+{% let eyebrow = "Vulnerabilità" %}
+{% let title = "Le falle che contano." %}
+{% let accent = "Quelle che un attaccante usa davvero." %}
+{% let lead = "Copriamo l'OWASP Top 10 e oltre: anche gli errori di logica specifici della tua attività, che nessuno scanner automatico è in grado di capire." %}
+{% include "partials/page_head.html" %}
+
+<section class="section section--tight" aria-label="Categorie di vulnerabilità">
+  <div class="wrap">
+    <div class="vulns" data-stagger>
+      <article class="vuln card reveal" data-spotlight><p class="vuln__tag mono">ACCESSI</p><h2>Controllo degli accessi</h2><p>Dati di altri utenti raggiungibili cambiando un numero nell'indirizzo (IDOR), privilegi da amministratore ottenuti senza averli, login aggirabile.</p><p class="vuln__impact mono">Impatto: furto di dati, violazione GDPR</p></article>
+      <article class="vuln card reveal" data-spotlight><p class="vuln__tag mono">INIEZIONI</p><h2>Iniezioni</h2><p>SQL e NoSQL, comandi di sistema, template lato server (SSTI): input che il sito esegue invece di trattare come semplice testo.</p><p class="vuln__impact mono">Impatto: lettura o modifica del database</p></article>
+      <article class="vuln card reveal" data-spotlight><p class="vuln__tag mono">SERVER</p><h2>Lato server</h2><p>SSRF, XXE, deserializzazione insicura ed esecuzione di codice remoto: le falle che aprono le porte dell'infrastruttura.</p><p class="vuln__impact mono">Impatto: controllo del server</p></article>
+      <article class="vuln card reveal" data-spotlight><p class="vuln__tag mono">CLIENT</p><h2>Lato browser</h2><p>XSS memorizzato, riflesso e DOM, CSRF, prototype pollution: attacchi che colpiscono i tuoi clienti attraverso il tuo sito.</p><p class="vuln__impact mono">Impatto: account dei clienti compromessi</p></article>
+      <article class="vuln card reveal" data-spotlight><p class="vuln__tag mono">LOGICA</p><h2>Logica di business</h2><p>Prezzi modificabili nel carrello, coupon riutilizzabili, passaggi obbligatori saltati, race condition sui pagamenti.</p><p class="vuln__impact mono">Impatto: perdite economiche dirette</p></article>
+      <article class="vuln card reveal" data-spotlight><p class="vuln__tag mono">SESSIONI</p><h2>Autenticazione e sessioni</h2><p>Token JWT manipolabili, sessioni che non scadono dopo il logout, protezioni deboli contro i tentativi ripetuti di accesso.</p><p class="vuln__impact mono">Impatto: accesso agli account altrui</p></article>
+      <article class="vuln card reveal" data-spotlight><p class="vuln__tag mono">API</p><h2>API</h2><p>Endpoint senza autenticazione, campi che l'utente non dovrebbe poter modificare (mass assignment), limiti di frequenza aggirabili.</p><p class="vuln__impact mono">Impatto: dati e funzioni esposte alle app</p></article>
+      <article class="vuln card reveal" data-spotlight><p class="vuln__tag mono">CONFIG</p><h2>Configurazioni e cloud</h2><p>Servizi esposti per errore, pannelli di amministrazione raggiungibili, header di sicurezza mancanti, componenti con vulnerabilità note.</p><p class="vuln__impact mono">Impatto: porta d'ingresso per altri attacchi</p></article>
+    </div>
+  </div>
+</section>
+
+<section class="section sectors" id="scenari" aria-labelledby="sectors-title">
+  <div class="wrap">
+    <div class="section__head">
+      <p class="label mono reveal" data-scramble>// Scenari</p>
+      <h2 class="display reveal" id="sectors-title">Ogni attività ha i suoi punti deboli.<br><span class="accent">Gli agenti sanno dove cercare.</span></h2>
+      <p class="section__lead reveal">Scegli un caso e guarda una campagna di test dal vivo. Obiettivi e vulnerabilità sono esempi realistici, non clienti reali.</p>
+    </div>
+    <div class="sectors__grid">
+      <div class="sectors__tabs reveal" role="tablist" aria-label="Scegli uno scenario" data-sector-tabs>
+        <button type="button" role="tab" aria-selected="true" data-sector="ecommerce"><span class="mono">01</span> E-commerce<small>Carrello, pagamenti, account dei clienti</small></button>
+        <button type="button" role="tab" aria-selected="false" data-sector="saas"><span class="mono">02</span> Web app e SaaS<small>Dati separati tra clienti, ruoli, permessi</small></button>
+        <button type="button" role="tab" aria-selected="false" data-sector="sanita"><span class="mono">03</span> Sanità<small>Referti, prenotazioni, dati sanitari</small></button>
+        <button type="button" role="tab" aria-selected="false" data-sector="wordpress"><span class="mono">04</span> Siti WordPress<small>Plugin, pannello di amministrazione, moduli</small></button>
+        <button type="button" role="tab" aria-selected="false" data-sector="api"><span class="mono">05</span> API<small>App mobili, integrazioni, servizi esterni</small></button>
+      </div>
+      <div class="sectors__demo reveal">
+        <div class="demo-frame">
+          <span class="corner corner--tl" aria-hidden="true"></span><span class="corner corner--tr" aria-hidden="true"></span>
+          <span class="corner corner--bl" aria-hidden="true"></span><span class="corner corner--br" aria-hidden="true"></span>
+          {% include "partials/console.html" %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section section--tight" aria-labelledby="vs-title">
+  <div class="wrap">
+    <div class="compare reveal">
+      <h2 class="display display--sm" id="vs-title">Scanner automatico<br><span class="accent">o penetration test?</span></h2>
+      <div class="compare__table" role="table" aria-label="Confronto">
+        <div role="row" class="compare__row compare__row--head mono"><span role="columnheader"><span class="sr-only">Caratteristica</span></span><span role="columnheader">Scanner</span><span role="columnheader">CORE829 Cyber</span></div>
+        <div role="row" class="compare__row"><span role="rowheader">Prova che la falla è sfruttabile</span><span role="cell">No</span><span role="cell"><b>Sì, per ognuna</b></span></div>
+        <div role="row" class="compare__row"><span role="rowheader">Falsi allarmi</span><span role="cell">Molti</span><span role="cell"><b>Eliminati prima del report</b></span></div>
+        <div role="row" class="compare__row"><span role="rowheader">Logica di business</span><span role="cell">Non la capisce</span><span role="cell"><b>Testata</b></span></div>
+        <div role="row" class="compare__row"><span role="rowheader">Falle concatenate</span><span role="cell">No</span><span role="cell"><b>Sì</b></span></div>
+        <div role="row" class="compare__row"><span role="rowheader">Correzione pronta</span><span role="cell">Generica</span><span role="cell"><b>Specifica per il tuo codice</b></span></div>
+        <div role="row" class="compare__row"><span role="rowheader">Revisione umana</span><span role="cell">No</span><span role="cell"><b>Sì, team CORE829</b></span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% include "partials/cta.html" %}
+{% endblock %}

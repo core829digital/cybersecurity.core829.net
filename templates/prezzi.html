@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block title %}Prezzi del penetration test · CORE829 Cyber{% endblock %}
+{% block description %}Prezzi chiari in euro: Check-up da {{ c.plans[0].price }} €, Pentest completo da {{ c.plans[1].price }} €, Protezione continua da {{ c.plans[2].price }} € al mese. Enterprise su misura. IVA esclusa.{% endblock %}
+
+{% block main %}
+{% let eyebrow = "Prezzi" %}
+{% let title = "Il costo di un test." %}
+{% let accent = "Non quello di un attacco." %}
+{% let lead = "Prezzi chiari in euro. Il preventivo finale dipende dal perimetro e te lo confermiamo per iscritto prima di iniziare." %}
+{% include "partials/page_head.html" %}
+
+<section class="section section--tight pricing" aria-label="Listino">
+  <div class="wrap">
+    <div class="plans plans--3" data-stagger>
+      {% for p in c.plans %}
+      <article class="plan card reveal{% if p.featured %} plan--featured{% endif %}" data-spotlight>
+        {% if p.featured %}<p class="plan__badge mono">Il più richiesto</p>{% endif %}
+        <h2 class="plan__name mono">{{ p.name }}</h2>
+        <p class="plan__for">{{ p.audience }}</p>
+        <p class="plan__price">
+          <span class="plan__from mono">da</span>
+          <span class="plan__num">{{ p.price }}</span><span class="plan__cur">€</span>
+          <span class="plan__per">{{ p.unit }}</span>
+        </p>
+        <p class="plan__note mono">IVA esclusa</p>
+        <ul class="plan__list">
+          {% for f in p.features %}<li>{{ f }}</li>{% endfor %}
+        </ul>
+        <a class="btn {% if p.featured %}btn--primary{% else %}btn--line{% endif %} btn--block" href="/contatti?servizio={{ p.id }}#richiesta"><span>Richiedi {{ p.name }}</span></a>
+      </article>
+      {% endfor %}
+    </div>
+
+    <div class="enterprise card reveal" data-spotlight>
+      <div>
+        <h2 class="mono">Enterprise</h2>
+        <p>Più applicazioni, revisione del codice sorgente, supporto alla conformità NIS2, test programmati durante l'anno e contratto su misura.</p>
+      </div>
+      <p class="enterprise__price">su <b>misura</b></p>
+      <a class="btn btn--line" href="/contatti?servizio=enterprise#richiesta"><span>Parliamone</span></a>
+    </div>
+
+    <ul class="pricing__notes mono reveal">
+      <li>Autorizzazione e verifica del dominio incluse</li>
+      <li>Report in italiano</li>
+      <li>Consegna cifrata</li>
+      <li>Call di presentazione dei risultati</li>
+    </ul>
+  </div>
+</section>
+
+<section class="section" aria-labelledby="factors-title">
+  <div class="wrap">
+    <div class="section__head">
+      <p class="label mono reveal" data-scramble>// Cosa incide sul prezzo</p>
+      <h2 class="display reveal" id="factors-title">Paghi il perimetro.<br><span class="accent">Non le ore.</span></h2>
+    </div>
+    <div class="factors" data-stagger>
+      <div class="factor reveal"><span class="mono">01</span><h3>Dimensione</h3><p>Numero di pagine, funzioni ed endpoint da testare.</p></div>
+      <div class="factor reveal"><span class="mono">02</span><h3>Ruoli utente</h3><p>Ogni ruolo con permessi diversi va testato separatamente.</p></div>
+      <div class="factor reveal"><span class="mono">03</span><h3>Modalità</h3><p>Dall'esterno, con login o con accesso al codice sorgente.</p></div>
+      <div class="factor reveal"><span class="mono">04</span><h3>Vincoli</h3><p>Finestre orarie ristrette o ambienti di prova dedicati.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="section section--tight" aria-labelledby="pfaq-title">
+  <div class="wrap faq__grid faq">
+    <div>
+      <p class="label mono reveal">// Domande sui prezzi</p>
+      <h2 class="display display--sm reveal" id="pfaq-title">Chiaro<br><span class="accent">prima di firmare.</span></h2>
+    </div>
+    <div class="faq__list">
+      <details class="reveal"><summary>Il prezzo può cambiare durante il test?</summary><div><p>No. Il preventivo firmato è definitivo per il perimetro concordato. Se durante il test emergono parti nuove da analizzare, te lo proponiamo prima e decidi tu.</p></div></details>
+      <details class="reveal"><summary>Il retest è incluso?</summary><div><p>Nel Pentest completo sì, un retest gratuito dopo le correzioni. Per il Check-up il retest si può aggiungere al preventivo.</p></div></details>
+      <details class="reveal"><summary>Come avviene il pagamento?</summary><div><p>Con bonifico su fattura emessa da {{ c.co.legal_name }}. Le condizioni sono indicate nel preventivo.</p></div></details>
+      <details class="reveal"><summary>Avete prezzi per le agenzie?</summary><div><p>Sì, con il programma partner. Scrivi a <a href="mailto:partnerships@core829.net">partnerships@core829.net</a> o vai su <a href="/servizi#partner">Servizi</a>.</p></div></details>
+    </div>
+  </div>
+</section>
+
+{% include "partials/cta.html" %}
+{% endblock %}

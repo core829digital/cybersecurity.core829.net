@@ -5,7 +5,10 @@
 //! montata su questo stesso router nella fase successiva.
 
 mod assets;
+mod catalog;
+mod company;
 mod config;
+mod encoded;
 mod pages;
 mod requests;
 mod security;
@@ -18,8 +21,7 @@ use axum::{
     routing::{get, post},
 };
 use tower_http::{
-    compression::CompressionLayer, limit::RequestBodyLimitLayer, timeout::TimeoutLayer,
-    trace::TraceLayer,
+    limit::RequestBodyLimitLayer, timeout::TimeoutLayer, trace::TraceLayer,
 };
 use tracing_subscriber::{EnvFilter, fmt};
 
@@ -44,6 +46,7 @@ async fn main() {
 
     let config = Arc::new(Config::from_env());
     let pages = Arc::new(Pages::render(&config).expect("rendering dei template fallito"));
+    let pages_count = pages.count();
     let store = Arc::new(
         RequestStore::open(&config.data_dir)
             .await
@@ -63,7 +66,14 @@ async fn main() {
     let listener = tokio::net::TcpListener::bind(addr)
         .await
         .unwrap_or_else(|e| panic!("bind su {addr} fallito: {e}"));
-    tracing::info!("CORE829 Cybersecurity online su http://{addr} (asset v{})", assets::version());
+    let (css, js) = assets::bundle_sizes();
+    tracing::info!(
+        "CORE829 Cyber online su http://{addr} · {} pagine · css {} KB · js {} KB · asset v{}",
+        pages_count,
+        css / 1024,
+        js / 1024,
+        assets::version()
+    );
 
     axum::serve(listener, app.into_make_service_with_connect_info::<SocketAddr>())
         .with_graceful_shutdown(shutdown_signal())
@@ -73,21 +83,18 @@ async fn main() {
 
 fn router(state: AppState) -> Router {
     Router::new()
-        .route("/", get(pages::index))
-        .route("/privacy", get(pages::privacy))
         .route("/robots.txt", get(pages::robots))
         .route("/sitemap.xml", get(pages::sitemap))
         .route("/healthz", get(|| async { "ok" }))
         .route("/favicon.ico", get(assets::favicon))
         .route("/assets/{*path}", get(assets::serve))
         .route("/api/richieste", post(requests::create))
-        .fallback(pages::not_found)
+        .fallback(pages::serve)
         .layer(RequestBodyLimitLayer::new(16 * 1024))
         .layer(TimeoutLayer::with_status_code(
             StatusCode::REQUEST_TIMEOUT,
             Duration::from_secs(15),
         ))
-        .layer(CompressionLayer::new())
         .layer(security::headers())
         .layer(TraceLayer::new_for_http())
         .with_state(state)

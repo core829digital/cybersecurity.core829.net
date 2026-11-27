@@ -1,0 +1,86 @@
+<form class="form card reveal" data-request-form action="/api/richieste" method="post" novalidate>
+  <span class="corner corner--tl" aria-hidden="true"></span><span class="corner corner--br" aria-hidden="true"></span>
+  <div class="form__grid">
+    <div class="field">
+      <label for="f-nome">Nome e cognome <abbr title="obbligatorio">*</abbr></label>
+      <input id="f-nome" name="nome" autocomplete="name" required maxlength="120">
+      <p class="field__err" id="e-nome" role="alert"></p>
+    </div>
+    <div class="field">
+      <label for="f-azienda">Azienda <abbr title="obbligatorio">*</abbr></label>
+      <input id="f-azienda" name="azienda" autocomplete="organization" required maxlength="160">
+      <p class="field__err" id="e-azienda" role="alert"></p>
+    </div>
+    <div class="field">
+      <label for="f-email">Email aziendale <abbr title="obbligatorio">*</abbr></label>
+      <input id="f-email" name="email" type="email" autocomplete="email" inputmode="email" required maxlength="254">
+      <p class="field__err" id="e-email" role="alert"></p>
+    </div>
+    <div class="field">
+      <label for="f-telefono">Telefono</label>
+      <input id="f-telefono" name="telefono" type="tel" autocomplete="tel" inputmode="tel" maxlength="40">
+      <p class="field__err" id="e-telefono" role="alert"></p>
+    </div>
+    <div class="field field--full">
+      <label for="f-target">Sito o app da testare <abbr title="obbligatorio">*</abbr></label>
+      <input id="f-target" name="target" type="text" inputmode="url" autocomplete="url" placeholder="www.tuosito.it" required maxlength="300">
+      <p class="field__err" id="e-target" role="alert"></p>
+    </div>
+    <div class="field">
+      <label for="f-tipo">Tipo di sistema <abbr title="obbligatorio">*</abbr></label>
+      <div class="select">
+        <select id="f-tipo" name="tipo" required>
+          <option value="" selected disabled>Seleziona…</option>
+          {% for (k, label) in c.target_types %}<option value="{{ k }}">{{ label }}</option>{% endfor %}
+        </select>
+      </div>
+      <p class="field__err" id="e-tipo" role="alert"></p>
+    </div>
+    <div class="field">
+      <label for="f-servizio">Servizio di interesse</label>
+      <div class="select">
+        <select id="f-servizio" name="servizio">
+          {% for (k, label) in c.services %}<option value="{{ k }}">{{ label }}</option>{% endfor %}
+        </select>
+      </div>
+      <p class="field__err" id="e-servizio" role="alert"></p>
+    </div>
+    <div class="field field--full">
+      <label for="f-messaggio">Cosa ti preoccupa di più?</label>
+      <textarea id="f-messaggio" name="messaggio" rows="4" maxlength="2000" placeholder="Es. abbiamo appena rifatto il checkout, gestiamo dati di pazienti, dobbiamo prepararci alla NIS2…"></textarea>
+    </div>
+    <div class="field field--hp" aria-hidden="true">
+      <label for="f-fax">Fax</label>
+      <input id="f-fax" name="fax" tabindex="-1" autocomplete="off">
+    </div>
+    <div class="field field--full">
+      <label class="check">
+        <input type="checkbox" name="autorizzazione" id="f-autorizzazione" required>
+        <span>Dichiaro di essere il titolare del sistema indicato o di avere l'autorizzazione del titolare a richiedere il test. So che nessun test inizierà prima della firma dell'autorizzazione scritta. <abbr title="obbligatorio">*</abbr></span>
+      </label>
+      <p class="field__err" id="e-autorizzazione" role="alert"></p>
+    </div>
+    <div class="field field--full">
+      <label class="check">
+        <input type="checkbox" name="privacy" id="f-privacy" required>
+        <span>Ho letto l'<a href="/privacy" target="_blank" rel="noopener">informativa privacy</a> e acconsento al trattamento dei dati per essere ricontattato. <abbr title="obbligatorio">*</abbr></span>
+      </label>
+      <p class="field__err" id="e-privacy" role="alert"></p>
+    </div>
+  </div>
+
+  <div class="form__foot">
+    <button class="btn btn--primary btn--block" type="submit" data-submit>
+      <span data-submit-label>Invia richiesta</span><i class="btn__arrow" aria-hidden="true">→</i>
+    </button>
+    <p class="form__status" data-form-status role="status" aria-live="polite"></p>
+    <noscript><p class="form__status is-error">Per inviare il modulo serve JavaScript. In alternativa scrivici a <a href="mailto:hello@core829.net">hello@core829.net</a>.</p></noscript>
+  </div>
+
+  <div class="form__done" data-form-done hidden tabindex="-1">
+    <div class="form__done-mark">{% include "partials/mark.html" %}</div>
+    <p class="label mono">// RICHIESTA RICEVUTA</p>
+    <h3>Ricevuto. Ci pensiamo noi.</h3>
+    <p>Il team CORE829 ti ricontatterà all'indirizzo email indicato per definire perimetro, autorizzazione e preventivo.</p>
+  </div>
+</form>

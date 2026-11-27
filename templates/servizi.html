@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+
+{% block title %}Servizi di penetration test · CORE829 Cyber{% endblock %}
+{% block description %}Check-up di sicurezza, penetration test completo e protezione continua per siti, e-commerce, web app e API. Test esterni, autenticati o sul codice sorgente, con report e retest.{% endblock %}
+
+{% block main %}
+{% let eyebrow = "Servizi" %}
+{% let title = "Un test per ogni fase." %}
+{% let accent = "Dal check-up alla protezione continua." %}
+{% let lead = "Scegli il livello di profondità adatto al tuo sistema. In ogni servizio gli agenti AI attaccano, il team CORE829 verifica, tu ricevi prove e correzioni." %}
+{% include "partials/page_head.html" %}
+
+<section class="section section--tight" aria-label="Elenco dei servizi">
+  <div class="wrap svc-detail">
+    {% let p = c.plans[0] %}
+    <article class="svc-row reveal" id="{{ p.id }}">
+      <div class="svc-row__head">
+        <span class="svc__idx mono">01</span>
+        <h2>{{ p.name }}</h2>
+        <p class="svc__price mono">da <b>{{ p.price }} €</b> {{ p.unit }}</p>
+      </div>
+      <div class="svc-row__body">
+        <p class="svc-row__lead">La fotografia rapida della sicurezza del tuo sito, vista da fuori come la vede un attaccante. Ideale per siti aziendali e piccoli e-commerce che non sono mai stati testati.</p>
+        <dl class="specs">
+          <div><dt>Per chi</dt><dd>{{ p.audience }}</dd></div>
+          <div><dt>Modalità</dt><dd>Black-box: dall'esterno, senza credenziali</dd></div>
+          <div><dt>Copertura</dt><dd>OWASP Top 10, configurazioni, componenti obsoleti, esposizione di dati</dd></div>
+          <div><dt>Ricevi</dt><dd>Report in italiano con prova di sfruttamento e correzione per ogni vulnerabilità</dd></div>
+          <div><dt>Tempi</dt><dd>In genere pochi giorni dalla firma dell'autorizzazione</dd></div>
+        </dl>
+        <a class="btn btn--line" href="/contatti?servizio={{ p.id }}#richiesta"><span>Richiedi il {{ p.name }}</span></a>
+      </div>
+    </article>
+
+    {% let p = c.plans[1] %}
+    <article class="svc-row svc-row--featured reveal" id="{{ p.id }}">
+      <div class="svc-row__head">
+        <span class="svc__idx mono">02</span>
+        <h2>{{ p.name }}</h2>
+        <p class="svc__price mono">da <b>{{ p.price }} €</b> {{ p.unit }}</p>
+        <p class="plan__badge plan__badge--inline mono">Il più richiesto</p>
+      </div>
+      <div class="svc-row__body">
+        <p class="svc-row__lead">Il test approfondito per chi gestisce dati di clienti, pagamenti o aree riservate. Gli agenti entrano anche con utenti di prova e verificano ruoli, permessi e logica di business.</p>
+        <dl class="specs">
+          <div><dt>Per chi</dt><dd>{{ p.audience }}</dd></div>
+          <div><dt>Modalità</dt><dd>Black-box e autenticato (grey-box) con utenti di test su più ruoli</dd></div>
+          <div><dt>Copertura</dt><dd>Web app e relative API, controllo degli accessi, sessioni, logica di business, lato server e lato client</dd></div>
+          <div><dt>Ricevi</dt><dd>Report tecnico, sintesi per la direzione, call di presentazione dei risultati</dd></div>
+          <div><dt>Incluso</dt><dd>Retest gratuito dopo le correzioni, con attestazione nel report</dd></div>
+        </dl>
+        <a class="btn btn--primary" href="/contatti?servizio={{ p.id }}#richiesta"><span>Richiedi il {{ p.name }}</span><i class="btn__arrow" aria-hidden="true">→</i></a>
+      </div>
+    </article>
+
+    {% let p = c.plans[2] %}
+    <article class="svc-row reveal" id="{{ p.id }}">
+      <div class="svc-row__head">
+        <span class="svc__idx mono">03</span>
+        <h2>{{ p.name }}</h2>
+        <p class="svc__price mono">da <b>{{ p.price }} €</b> {{ p.unit }}</p>
+      </div>
+      <div class="svc-row__body">
+        <p class="svc-row__lead">Ogni rilascio può aprire una nuova falla. Con la protezione continua gli agenti testano le modifiche importanti direttamente dalla tua pipeline, prima che arrivino in produzione.</p>
+        <dl class="specs">
+          <div><dt>Per chi</dt><dd>{{ p.audience }}</dd></div>
+          <div><dt>Modalità</dt><dd>White-box: codice sorgente in sola lettura più test sull'ambiente di staging</dd></div>
+          <div><dt>Integrazioni</dt><dd>GitHub e GitLab: test collegati alle pull request</dd></div>
+          <div><dt>Ricevi</dt><dd>Segnalazione immediata delle vulnerabilità nuove e resoconto mensile dei rischi</dd></div>
+          <div><dt>Supporto</dt><dd>Referente CORE829 dedicato</dd></div>
+        </dl>
+        <a class="btn btn--line" href="/contatti?servizio={{ p.id }}#richiesta"><span>Richiedi la {{ p.name }}</span></a>
+      </div>
+    </article>
+
+    <article class="svc-row reveal" id="enterprise">
+      <div class="svc-row__head">
+        <span class="svc__idx mono">04</span>
+        <h2>Enterprise</h2>
+        <p class="svc__price mono">su <b>misura</b></p>
+      </div>
+      <div class="svc-row__body">
+        <p class="svc-row__lead">Per organizzazioni con più applicazioni, obblighi normativi o sistemi critici.</p>
+        <dl class="specs">
+          <div><dt>Perimetro</dt><dd>Più applicazioni, API e ambienti, con revisione del codice sorgente</dd></div>
+          <div><dt>Conformità</dt><dd>Supporto documentale per GDPR, NIS2 e audit dei fornitori</dd></div>
+          <div><dt>Pianificazione</dt><dd>Test programmati durante l'anno e verifiche manuali mirate</dd></div>
+          <div><dt>Contratto</dt><dd>Su misura, con livelli di servizio concordati</dd></div>
+        </dl>
+        <a class="btn btn--line" href="/contatti?servizio=enterprise#richiesta"><span>Parliamone</span></a>
+      </div>
+    </article>
+  </div>
+</section>
+
+<section class="section install" aria-labelledby="modes-title">
+  <div class="wrap install__grid">
+    <div class="install__copy">
+      <p class="label mono reveal" data-scramble>// Modalità di test</p>
+      <h2 class="display reveal" id="modes-title">Dall'esterno, con login<br><span class="accent">o dal codice.</span></h2>
+      <p class="section__lead reveal">Il perimetro lo decidi tu e lo scriviamo nell'autorizzazione: cosa testare, in quali orari e cosa escludere. Gli agenti non vanno mai oltre.</p>
+      <ul class="platforms reveal" aria-label="Sistemi testabili">
+        <li>Siti aziendali</li><li>E-commerce</li><li>Web app</li><li>SaaS</li><li>API REST</li><li>OpenAPI e Postman</li><li>WordPress</li><li>Repository Git</li>
+      </ul>
+    </div>
+    {% include "partials/terminal.html" %}
+  </div>
+</section>
+
+<section class="section agency" aria-labelledby="agency-title">
+  <div class="wrap">
+    <div class="agency__box reveal" id="partner">
+      <div class="agency__copy">
+        <p class="label mono">// Partner</p>
+        <h2 class="display display--sm" id="agency-title">Sei un'agenzia web?<br><span class="accent">Consegna siti già testati.</span></h2>
+        <p>Aggiungi il penetration test ai tuoi progetti e ai contratti di manutenzione. Tu mantieni il cliente, noi facciamo i test e ti diamo un report da consegnare. Scrivici a <a href="mailto:partnerships@core829.net">partnerships@core829.net</a>.</p>
+      </div>
+      <ul class="agency__perks mono">
+        <li><b>Prezzi</b><span>riservati ai partner</span></li>
+        <li><b>Report</b><span>col marchio della tua agenzia</span></li>
+        <li><b>0</b><span>competenze di sicurezza richieste</span></li>
+      </ul>
+      <a class="btn btn--primary" href="/contatti?tipo=agenzia#richiesta"><span>Diventa partner</span><i class="btn__arrow" aria-hidden="true">→</i></a>
+    </div>
+  </div>
+</section>
+
+{% include "partials/cta.html" %}
+{% endblock %}

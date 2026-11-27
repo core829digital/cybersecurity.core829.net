@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}Domande frequenti sul penetration test · CORE829 Cyber{% endblock %}
+{% block description %}Cos'è un penetration test, è legale, può danneggiare il sito, quanto costa e quanto dura. Tutte le risposte sul servizio CORE829 Cyber.{% endblock %}
+{% block jsonld %},
+      {{ c.faq_jsonld()|safe }}
+{% endblock %}
+
+{% block main %}
+{% let eyebrow = "Domande frequenti" %}
+{% let title = "Le risposte," %}
+{% let accent = "prima di chiedere." %}
+{% let lead = "Tutto quello che ci chiedono più spesso su servizio, legalità, tempi e costi. Non trovi la tua domanda? Scrivici." %}
+{% include "partials/page_head.html" %}
+
+<section class="section section--tight faq" aria-label="Domande frequenti">
+  <div class="wrap faq-groups">
+    {% for g in c.faq %}
+    <div class="faq-group">
+      <h2 class="faq-group__title mono reveal"><span>0{{ loop.index }}</span>{{ g.title }}</h2>
+      <div class="faq__list">
+        {% for (q, a) in g.items %}
+        <details class="reveal"><summary>{{ q }}</summary><div><p>{{ a }}</p></div></details>
+        {% endfor %}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+
+{% include "partials/cta.html" %}
+{% endblock %}

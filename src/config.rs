@@ -20,7 +20,7 @@ impl Config {
             port: env("PORT").and_then(|p| p.parse().ok()).unwrap_or(8080),
             data_dir: env("DATA_DIR").map(PathBuf::from).unwrap_or_else(|| "data".into()),
             site_url: env("SITE_URL")
-                .unwrap_or_else(|| "https://cybersecurity.core829.net".into())
+                .unwrap_or_else(|| "https://cyber.core829.net".into())
                 .trim_end_matches('/')
                 .to_owned(),
             trust_proxy: env("TRUST_PROXY").is_some_and(|v| v == "1" || v.eq_ignore_ascii_case("true")),

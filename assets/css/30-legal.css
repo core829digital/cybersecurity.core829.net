@@ -1,0 +1,15 @@
+/* ==========================================================================
+   PAGINE SECONDARIE
+   ========================================================================== */
+.legal { padding-top: calc(var(--nav-h) + 80px); }
+.legal h1 { margin-bottom: 12px; }
+.legal__meta { font-size: 12px; color: var(--dim); margin-bottom: 48px; }
+.legal h2 { margin: 44px 0 12px; font-size: 22px; letter-spacing: -.02em; }
+.legal p { color: var(--muted); }
+.legal p + p { margin-top: 12px; }
+.legal a { color: var(--text); text-decoration-color: var(--red); text-underline-offset: 3px; }
+.legal strong { color: var(--text); }
+.nav__links--static { display: flex !important; position: static !important; }
+.lost { min-height: 88vh; display: flex; align-items: center; padding-top: var(--nav-h); }
+.lost__code { font-size: clamp(120px, 26vw, 320px); line-height: .9; letter-spacing: -.06em; color: var(--red); text-shadow: 0 0 60px rgba(255, 39, 67, .45); }
+.lost__text { margin: 18px 0 36px; font-size: 20px; color: var(--muted); max-width: 520px; }

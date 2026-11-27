@@ -6,6 +6,8 @@ edition = "2024"
 [dependencies]
 askama = "0.16.1"
 axum = "0.8"
+brotli = "8"
+flate2 = "1"
 mime_guess = "2.0.5"
 rust-embed = "8.14.0"
 serde = { version = "1.0.229", features = ["derive"] }
@@ -13,7 +15,7 @@ serde_json = "1.0.154"
 time = { version = "0.3.55", features = ["formatting", "macros"] }
 tokio = { version = "1.54.1", features = ["full"] }
 tower = "0.5.3"
-tower-http = { version = "0.7.1", features = ["compression-full", "set-header", "limit", "trace", "timeout"] }
+tower-http = { version = "0.7.1", features = ["set-header", "limit", "trace", "timeout"] }
 tracing = "0.1.44"
 tracing-subscriber = { version = "0.3.23", features = ["env-filter"] }
 uuid = { version = "1.29.3", features = ["v4", "serde"] }

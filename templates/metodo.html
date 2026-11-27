@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block title %}Il metodo: come lavora il penetration test con AI · CORE829 Cyber{% endblock %}
+{% block description %}Richiesta, autorizzazione, attacco controllato con agenti AI, report con prove e retest. Come lavoriamo, cosa ci serve da te e cosa ricevi in ogni fase.{% endblock %}
+
+{% block main %}
+{% let eyebrow = "Metodo" %}
+{% let title = "Cinque fasi." %}
+{% let accent = "Nessuna sorpresa." %}
+{% let lead = "Un processo chiaro dall'inizio alla fine: sai sempre cosa stiamo facendo, cosa ci serve da te e cosa riceverai." %}
+{% include "partials/page_head.html" %}
+
+<section class="section section--tight how" aria-labelledby="steps-title">
+  <div class="wrap"><h2 class="sr-only" id="steps-title">Le fasi in sintesi</h2>{% include "partials/steps.html" %}</div>
+</section>
+
+<section class="section" aria-labelledby="phases-title">
+  <div class="wrap">
+    <div class="section__head">
+      <p class="label mono reveal" data-scramble>// Fase per fase</p>
+      <h2 class="display reveal" id="phases-title">Cosa succede,<br><span class="accent">e cosa serve da te.</span></h2>
+    </div>
+    <ol class="phases">
+      <li class="phase reveal">
+        <span class="phase__n mono">01</span>
+        <div><h3>Richiesta e perimetro</h3><p>Compili il modulo o ci scrivi. Analizziamo il sistema dall'esterno, senza toccarlo, e ti proponiamo cosa testare, con quale modalità e in quanto tempo.</p></div>
+        <dl class="phase__meta mono"><div><dt>Da te</dt><dd>Indirizzo del sistema e obiettivi</dd></div><div><dt>Ricevi</dt><dd>Perimetro e preventivo</dd></div></dl>
+      </li>
+      <li class="phase reveal">
+        <span class="phase__n mono">02</span>
+        <div><h3>Autorizzazione e verifica</h3><p>Firmi la lettera di incarico con perimetro, finestre orarie ed esclusioni, e un accordo di riservatezza. Verifichiamo che il dominio sia tuo con un record DNS o un file sul server.</p></div>
+        <dl class="phase__meta mono"><div><dt>Da te</dt><dd>Firma e verifica del dominio</dd></div><div><dt>Ricevi</dt><dd>Data di inizio confermata</dd></div></dl>
+      </li>
+      <li class="phase reveal">
+        <span class="phase__n mono">03</span>
+        <div><h3>Attacco controllato</h3><p>Gli agenti AI mappano la superficie di attacco e lavorano in parallelo, ognuno con la sua specialità. Si passano le scoperte e provano a concatenare le falle, come farebbe un attaccante vero, sempre dentro il perimetro firmato.</p></div>
+        <dl class="phase__meta mono"><div><dt>Da te</dt><dd>Utenti di test, se previsti</dd></div><div><dt>Ricevi</dt><dd>Avviso immediato se troviamo una falla critica</dd></div></dl>
+      </li>
+      <li class="phase reveal">
+        <span class="phase__n mono">04</span>
+        <div><h3>Validazione e report</h3><p>Una vulnerabilità entra nel report solo se gli agenti riescono a sfruttarla davvero. Il team CORE829 rivede ogni risultato, elimina i falsi positivi e scrive priorità e correzioni.</p></div>
+        <dl class="phase__meta mono"><div><dt>Da te</dt><dd>Un'ora per la call di presentazione</dd></div><div><dt>Ricevi</dt><dd>Report tecnico e sintesi per la direzione</dd></div></dl>
+      </li>
+      <li class="phase reveal">
+        <span class="phase__n mono">05</span>
+        <div><h3>Correzione e retest</h3><p>I tuoi sviluppatori applicano le correzioni, anche con il nostro supporto. Poi ripetiamo gli stessi attacchi e attestiamo nel report quali falle risultano chiuse.</p></div>
+        <dl class="phase__meta mono"><div><dt>Da te</dt><dd>Le correzioni applicate</dd></div><div><dt>Ricevi</dt><dd>Attestazione di retest</dd></div></dl>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<section class="section" aria-labelledby="agents-title">
+  <div class="wrap">
+    <div class="section__head">
+      <p class="label mono reveal" data-scramble>// La squadra</p>
+      <h2 class="display reveal" id="agents-title">Agenti specializzati.<br><span class="accent">Una regia umana.</span></h2>
+      <p class="section__lead reveal">Ogni agente ha un compito preciso e i suoi strumenti: proxy per intercettare il traffico, browser automatizzato, terminale e un ambiente isolato per scrivere le prove di sfruttamento.</p>
+    </div>
+    <div class="agents" data-stagger>
+      <article class="agent card reveal" data-spotlight><p class="agent__id mono">RECON</p><h3>Ricognizione</h3><p>Mappa pagine, endpoint, parametri, tecnologie e sottodomini: tutto ciò che si può attaccare.</p></article>
+      <article class="agent card reveal" data-spotlight><p class="agent__id mono">INJ</p><h3>Iniezioni</h3><p>Prova SQL, NoSQL, comandi di sistema e template su ogni input che arriva al server.</p></article>
+      <article class="agent card reveal" data-spotlight><p class="agent__id mono">ACL</p><h3>Controllo accessi</h3><p>Cerca dati di altri utenti, privilegi ottenibili e funzioni riservate raggiungibili.</p></article>
+      <article class="agent card reveal" data-spotlight><p class="agent__id mono">XSS</p><h3>Lato client</h3><p>Usa un browser reale per verificare XSS, CSRF e clickjacking come li vivrebbe un tuo cliente.</p></article>
+      <article class="agent card reveal" data-spotlight><p class="agent__id mono">LOGIC</p><h3>Logica di business</h3><p>Ragiona sul funzionamento del tuo servizio: carrello, coupon, pagamenti, passaggi obbligatori.</p></article>
+      <article class="agent card reveal" data-spotlight><p class="agent__id mono">API</p><h3>API</h3><p>Legge specifiche OpenAPI e collezioni Postman e testa autenticazione, campi protetti e limiti.</p></article>
+      <article class="agent card reveal" data-spotlight><p class="agent__id mono">PoC</p><h3>Validazione</h3><p>Riproduce ogni scoperta con una prova di sfruttamento funzionante. Senza prova, niente report.</p></article>
+      <article class="agent card reveal agent--human" data-spotlight><p class="agent__id mono">CORE829</p><h3>Revisione umana</h3><p>Il team verifica ogni risultato, valuta l'impatto reale sulla tua attività e firma il report.</p></article>
+    </div>
+  </div>
+</section>
+
+<section class="section section--tight" aria-labelledby="std-title">
+  <div class="wrap">
+    <div class="standards reveal">
+      <h2 class="mono" id="std-title">Riferimenti</h2>
+      <ul>
+        <li><b>OWASP Top 10</b><span>Le dieci categorie di rischio più diffuse nelle applicazioni web</span></li>
+        <li><b>OWASP WSTG</b><span>La guida di riferimento per i test di sicurezza web</span></li>
+        <li><b>CVSS</b><span>Lo standard internazionale per misurare la gravità di una vulnerabilità</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+{% include "partials/cta.html" %}
+{% endblock %}

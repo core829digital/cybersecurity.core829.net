@@ -1,0 +1,18 @@
+<div class="terminal reveal" data-terminal>
+  <div class="terminal__bar">
+    <span class="terminal__dots" aria-hidden="true"><i></i><i></i><i></i></span>
+    <div class="terminal__tabs" role="tablist" aria-label="Modalità di test">
+      <button type="button" role="tab" aria-selected="true" data-tab="esterno">Dall'esterno</button>
+      <button type="button" role="tab" aria-selected="false" data-tab="login">Con login</button>
+      <button type="button" role="tab" aria-selected="false" data-tab="codice">Codice sorgente</button>
+    </div>
+  </div>
+  <div class="terminal__body mono">
+    <p class="terminal__hint" data-term-hint>Perimetro del test</p>
+    <pre class="terminal__code" tabindex="0"><code data-term-code></code><span class="caret" aria-hidden="true"></span></pre>
+    <div class="terminal__out" data-term-out aria-live="polite"></div>
+  </div>
+  <div hidden data-term-src="esterno" data-text="obiettivo: https://shop.tuosito.it&#10;modalità:  black-box (come un attaccante esterno)&#10;finestra:  lun–ven, 22:00–06:00&#10;esclusi:   /checkout/pagamento, attacchi DoS"></div>
+  <div hidden data-term-src="login" data-text="obiettivo: https://app.tuosito.it&#10;modalità:  autenticato (2 utenti di test)&#10;ruoli:     cliente, amministratore&#10;focus:     dati di altri clienti, permessi"></div>
+  <div hidden data-term-src="codice" data-text="obiettivo:  github.com/tuaazienda/app&#10;modalità:   white-box (codice + app in staging)&#10;ambiente:   https://staging.tuosito.it&#10;rilasci:    test a ogni pull request"></div>
+</div>

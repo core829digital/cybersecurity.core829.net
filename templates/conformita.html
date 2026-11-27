@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block title %}Conformità e regole d'ingaggio · CORE829 Cyber{% endblock %}
+{% block description %}Testiamo solo con autorizzazione scritta del titolare e verifica del dominio. Test non distruttivi, riservatezza e dati in UE. Come il penetration test aiuta con GDPR art. 32, NIS2 e DORA.{% endblock %}
+
+{% block main %}
+{% let eyebrow = "Conformità" %}
+{% let title = "Hacker sì." %}
+{% let accent = "Fuorilegge mai." %}
+{% let lead = "Attaccare un sistema senza permesso è reato. Per questo ogni nostro test segue regole scritte, firmate e verificabili." %}
+{% include "partials/page_head.html" %}
+
+<section class="section section--tight compliance" aria-labelledby="rules-title">
+  <div class="wrap compliance__grid">
+    <div class="radar reveal" aria-hidden="true">
+      <div class="radar__ring"></div><div class="radar__ring"></div><div class="radar__ring"></div>
+      <div class="radar__sweep"></div>
+      <span class="radar__node mono radar__node--1">AUTORIZZAZIONE</span>
+      <span class="radar__node mono radar__node--2">GDPR ART. 32</span>
+      <span class="radar__node mono radar__node--3">NIS2</span>
+      <span class="radar__node mono radar__node--4">OWASP</span>
+      <div class="radar__core">{% include "partials/mark.html" %}</div>
+    </div>
+    <div>
+      <p class="label mono reveal">// Regole d'ingaggio</p>
+      <h2 class="display display--sm reveal" id="rules-title">Sei regole che<br><span class="accent">non cambiano mai.</span></h2>
+      <ul class="checks" data-stagger>
+        <li class="reveal"><b>Autorizzazione scritta, sempre.</b> Nessun test parte senza la lettera di incarico firmata dal titolare del sistema, con perimetro, date ed esclusioni.</li>
+        <li class="reveal"><b>Dominio verificato.</b> Prima di iniziare controlliamo che il sito sia tuo, con un record DNS o un file sul server.</li>
+        <li class="reveal"><b>Perimetro e orari concordati.</b> Testiamo solo ciò che è nell'incarico, nelle finestre orarie che scegli tu.</li>
+        <li class="reveal"><b>Test non distruttivi.</b> Niente cancellazione di dati e niente attacchi di saturazione (DoS) che possano fermare il servizio.</li>
+        <li class="reveal"><b>Stop immediato.</b> Hai un contatto diretto per sospendere il test in qualsiasi momento.</li>
+        <li class="reveal"><b>Massima riservatezza.</b> Accordo di riservatezza, report cifrati, dati conservati in UE e cancellati a fine incarico.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="section" aria-labelledby="law-title">
+  <div class="wrap">
+    <div class="section__head">
+      <p class="label mono reveal" data-scramble>// Quadro normativo</p>
+      <h2 class="display reveal" id="law-title">Un test che ti aiuta<br><span class="accent">anche con le norme.</span></h2>
+      <p class="section__lead reveal">Il report di un penetration test è uno dei documenti più concreti per dimostrare che la sicurezza viene verificata, non solo dichiarata.</p>
+    </div>
+    <div class="laws" data-stagger>
+      <article class="law card reveal" data-spotlight>
+        <p class="law__ref mono">Reg. UE 2016/679</p>
+        <h3>GDPR, articolo 32</h3>
+        <p>Chiede una procedura per testare, verificare e valutare regolarmente l'efficacia delle misure di sicurezza. Il report, con date e risultati, la documenta.</p>
+      </article>
+      <article class="law card reveal" data-spotlight>
+        <p class="law__ref mono">Dir. UE 2022/2555 · D.Lgs. 138/2024</p>
+        <h3>NIS2</h3>
+        <p>I soggetti coinvolti devono gestire i rischi informatici e valutare l'efficacia delle misure adottate, anche nella catena dei fornitori.</p>
+      </article>
+      <article class="law card reveal" data-spotlight>
+        <p class="law__ref mono">Reg. UE 2022/2554</p>
+        <h3>DORA</h3>
+        <p>Per il settore finanziario prevede test periodici di resilienza operativa digitale, inclusi test sulle applicazioni esposte.</p>
+      </article>
+      <article class="law card reveal" data-spotlight>
+        <p class="law__ref mono">Art. 615-ter c.p. · Art. 360 C. pen. RO</p>
+        <h3>Accesso abusivo</h3>
+        <p>In Italia e in Romania l'accesso non autorizzato a un sistema informatico è reato. L'autorizzazione scritta del titolare è ciò che rende il test legittimo.</p>
+      </article>
+    </div>
+    <p class="note reveal">Le informazioni su questa pagina hanno scopo divulgativo e non costituiscono consulenza legale. Per valutare gli obblighi specifici della tua organizzazione rivolgiti al tuo consulente.</p>
+  </div>
+</section>
+
+<section class="section section--tight" aria-labelledby="data-title">
+  <div class="wrap">
+    <div class="datahandling reveal">
+      <h2 class="mono" id="data-title">Come trattiamo i dati del test</h2>
+      <ul>
+        <li><b>Dove</b><span>Su server situati nell'Unione Europea</span></li>
+        <li><b>Chi li vede</b><span>Solo il team CORE829 incaricato e i referenti che indichi tu</span></li>
+        <li><b>Come li consegniamo</b><span>Report in PDF cifrato, password comunicata su un canale separato</span></li>
+        <li><b>Per quanto</b><span>Fino al termine concordato nell'incarico, poi cancellati</span></li>
+        <li><b>Modelli AI</b><span>Fornitori con contratti che escludono l'uso dei dati per l'addestramento</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+{% include "partials/cta.html" %}
+{% endblock %}

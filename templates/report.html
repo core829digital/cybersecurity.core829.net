@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+
+{% block title %}Il report del penetration test · CORE829 Cyber{% endblock %}
+{% block description %}Com'è fatto il report CORE829: prova di sfruttamento per ogni vulnerabilità, gravità CVSS, correzione pronta, sintesi per la direzione e attestazione di retest. Consegnato cifrato.{% endblock %}
+
+{% block main %}
+{% let eyebrow = "Il report" %}
+{% let title = "Non una lista di allarmi." %}
+{% let accent = "Prove, priorità e soluzioni." %}
+{% let lead = "Il report è scritto per essere usato: i tuoi sviluppatori sanno cosa correggere e come, la direzione sa quanto è grave e da dove cominciare." %}
+{% include "partials/page_head.html" %}
+
+<section class="section section--tight" aria-labelledby="sample-title">
+  <div class="wrap">
+    <h2 class="sr-only" id="sample-title">Esempio di report</h2>
+    <div class="bento">
+      <article class="card bento__a reveal" data-spotlight>
+        <p class="card__kicker mono">Esempio di vulnerabilità nel report</p>
+        <div class="finding finding--static">
+          <div class="finding__top"><span class="sev-pill sev-pill--crit mono">CRITICA · CVSS 9.1</span><span class="mono finding__id">VULN-003</span></div>
+          <h3>Il prezzo del carrello si può modificare dal browser</h3>
+          <p>Il server accetta il prezzo inviato dal browser invece di ricalcolarlo. Chiunque può acquistare qualsiasi prodotto a 0,01 €.</p>
+          <p class="finding__label mono">Prova di sfruttamento</p>
+          <pre class="finding__poc mono">POST /api/carrello/conferma
+{ "prodotto": 4471, "quantita": 1, <mark>"prezzo": 0.01</mark> }
+
+→ 200 OK · ordine #10582 creato a 0,01 €</pre>
+          <p class="finding__label mono">Correzione</p>
+          <p>Ricalcolare sempre prezzo e totale sul server partendo dal catalogo, ignorando i valori inviati dal client.</p>
+        </div>
+      </article>
+
+      <article class="card bento__b reveal" data-spotlight>
+        <p class="card__kicker mono">Priorità</p>
+        <h3>Sai da dove cominciare</h3>
+        <p>Ogni vulnerabilità ha un punteggio CVSS e una priorità di intervento.</p>
+        <div class="sevbars mono" aria-hidden="true">
+          <p><span>Critica</span><i class="sevbars__bar sevbars__bar--crit"></i><b>1</b></p>
+          <p><span>Alta</span><i class="sevbars__bar sevbars__bar--high"></i><b>2</b></p>
+          <p><span>Media</span><i class="sevbars__bar sevbars__bar--med"></i><b>4</b></p>
+          <p><span>Bassa</span><i class="sevbars__bar sevbars__bar--low"></i><b>6</b></p>
+        </div>
+        <p class="bars__note mono">Esempio</p>
+      </article>
+
+      <article class="card bento__c reveal" data-spotlight>
+        <p class="card__kicker mono">Correzione</p>
+        <h3>La soluzione, già scritta</h3>
+        <pre class="diff mono" aria-hidden="true"><span class="diff__del">- totale = req.body.prezzo</span>
+<span class="diff__add">+ totale = catalogo.prezzo(id)</span>
+<span class="diff__add">+   * quantita</span></pre>
+      </article>
+
+      <article class="card bento__d reveal" data-spotlight>
+        <p class="card__kicker mono">Retest</p>
+        <h3>Verifichiamo che sia chiusa</h3>
+        <p>Dopo le correzioni ripetiamo gli stessi attacchi.</p>
+        <div class="handoff mono" aria-hidden="true"><span>VULNERABILE</span><i></i><span>CHIUSA</span></div>
+      </article>
+
+      <article class="card bento__e reveal" data-spotlight>
+        <p class="card__kicker mono">Due livelli</p>
+        <h3>Per gli sviluppatori e per la direzione</h3>
+        <p>Un report tecnico con prove e correzioni, e una sintesi chiara per chi deve decidere tempi e budget.</p>
+      </article>
+
+      <article class="card bento__f reveal" data-spotlight>
+        <p class="card__kicker mono">Rilasci</p>
+        <h3>Sicuro anche dopo il prossimo aggiornamento</h3>
+        <p>Con la protezione continua gli agenti testano ogni rilascio importante, direttamente dalla tua pipeline su GitHub o GitLab.</p>
+        <div class="pipe mono" aria-hidden="true"><span>commit</span><i></i><span>build</span><i></i><span class="pipe__sec">test di sicurezza</span><i></i><span>rilascio</span></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="section" aria-labelledby="sev-title">
+  <div class="wrap">
+    <div class="section__head">
+      <p class="label mono reveal" data-scramble>// Scala di gravità</p>
+      <h2 class="display reveal" id="sev-title">Quattro livelli,<br><span class="accent">uno standard internazionale.</span></h2>
+      <p class="section__lead reveal">Usiamo il punteggio CVSS, da 0 a 10, e lo traduciamo in una priorità concreta per la tua attività.</p>
+    </div>
+    <div class="sevscale" data-stagger>
+      <div class="sevscale__item sevscale__item--crit reveal"><span class="mono">9.0 – 10.0</span><h3>Critica</h3><p>Sfruttabile subito, con danni gravi. Da correggere prima di tutto, anche fermando una funzione.</p></div>
+      <div class="sevscale__item sevscale__item--high reveal"><span class="mono">7.0 – 8.9</span><h3>Alta</h3><p>Rischio concreto per dati o soldi. Da correggere nei giorni successivi.</p></div>
+      <div class="sevscale__item sevscale__item--med reveal"><span class="mono">4.0 – 6.9</span><h3>Media</h3><p>Sfruttabile in condizioni particolari. Da pianificare nel prossimo rilascio.</p></div>
+      <div class="sevscale__item sevscale__item--low reveal"><span class="mono">0.1 – 3.9</span><h3>Bassa</h3><p>Impatto limitato o rafforzamento consigliato. Da inserire nella manutenzione.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="section section--tight" aria-labelledby="toc-title">
+  <div class="wrap toc">
+    <div>
+      <p class="label mono reveal">// Indice del report</p>
+      <h2 class="display display--sm reveal" id="toc-title">Cosa contiene,<br><span class="accent">pagina per pagina.</span></h2>
+      <p class="section__lead reveal">Consegnato in PDF cifrato ai soli referenti che indichi tu, con una call di presentazione dei risultati.</p>
+    </div>
+    <ol class="toc__list mono" data-stagger>
+      <li class="reveal"><span>01</span>Sintesi per la direzione</li>
+      <li class="reveal"><span>02</span>Perimetro, date e autorizzazione</li>
+      <li class="reveal"><span>03</span>Metodologia e riferimenti</li>
+      <li class="reveal"><span>04</span>Riepilogo dei rischi per gravità</li>
+      <li class="reveal"><span>05</span>Vulnerabilità: descrizione, prova, impatto</li>
+      <li class="reveal"><span>06</span>Correzioni consigliate</li>
+      <li class="reveal"><span>07</span>Attestazione di retest</li>
+    </ol>
+  </div>
+</section>
+
+{% include "partials/cta.html" %}
+{% endblock %}

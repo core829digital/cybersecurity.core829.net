@@ -1,7 +1,7 @@
-# CORE829 Cybersecurity — landing page
+# CORE829 Cyber — cyber.core829.net
 
-Landing page del servizio di **penetration test con agenti AI** di **CORE829 SRL**
-(`cybersecurity.core829.net`). Il cliente invia solo una richiesta dal sito; perimetro,
+Sito multipagina del servizio di **penetration test con agenti AI** di **CORE829 SRL**,
+ramificazione di [core829.net](https://core829.net) pubblicata sul sottodominio `cyber.core829.net`. Il cliente invia solo una richiesta dal sito; perimetro,
 autorizzazione, test, report e retest sono gestiti internamente da CORE829.
 
 > Regola non negoziabile: nessun test parte senza **autorizzazione scritta del titolare**
@@ -30,7 +30,7 @@ cargo run --release
 |---|---|---|
 | `PORT` | `8080` | Porta HTTP |
 | `DATA_DIR` | `./data` | Cartella dove vengono salvate le richieste (`richieste.jsonl`) |
-| `SITE_URL` | `https://cybersecurity.core829.net` | URL pubblico (canonical, sitemap, Open Graph) |
+| `SITE_URL` | `https://cyber.core829.net` | URL pubblico (canonical, sitemap, Open Graph) |
 | `TRUST_PROXY` | `false` | `true` solo dietro un reverse proxy fidato (legge `X-Forwarded-For`) |
 
 ## Produzione con Docker
@@ -42,19 +42,34 @@ docker run -d -p 8080:8080 -v core829-cyber-data:/data -e TRUST_PROXY=true core8
 
 Mettere davanti un reverse proxy con HTTPS (Caddy, Nginx o Cloudflare).
 
+## Pagine
+
+`/` · `/servizi` · `/metodo` · `/vulnerabilita` · `/report` · `/prezzi` · `/conformita` · `/faq` · `/chi-siamo` · `/contatti` · `/privacy` (+ 404, `sitemap.xml`, `robots.txt`).
+Per aggiungerne una: template in `templates/` e una riga nella macro `pages!` di `src/pages.rs`.
+
 ## Struttura
 
 ```
 src/
   main.rs       router, middleware, avvio e arresto ordinato
   config.rs     variabili d'ambiente
-  pages.rs      pagine renderizzate all'avvio, listino dei servizi (PLANS_INFO)
+  company.rs    dati aziendali CORE829 (unica fonte per pagine, footer e dati strutturati)
+  catalog.rs    listino servizi e domande frequenti
+  pages.rs      pagine renderizzate e pre-compresse all'avvio, menu, sitemap
+  encoded.rs    risposte pre-compresse (brotli/gzip) con ETag e 304
   requests.rs   POST /api/richieste: validazione, anti-spam, limite di frequenza, salvataggio
-  assets.rs     asset incorporati con ETag e cache immutabile
+  assets.rs     asset incorporati; unisce css/NN-*.css e js/NN-*.js in un solo file ciascuno
   security.rs   header di sicurezza (CSP rigorosa, HSTS, ecc.)
-templates/      index, privacy, 404, layout base, console demo
-assets/         css, js, font, immagini
+templates/      pagine, layout base, parziali (console, form, step, CTA…)
+assets/         css e js in moduli numerati, font, immagini, regole di prefetch
 ```
+
+## Prestazioni
+
+- Pagine e asset compressi una sola volta all'avvio (brotli 11 + gzip), serviti dalla memoria con ETag.
+- Un solo CSS e un solo JS per tutto il sito, con cache immutabile (`?v=` = hash del contenuto).
+- Navigazione istantanea: regole di prerender (`Speculation-Rules`) e transizioni tra pagine (View Transitions).
+- Animazioni sospese fuori schermo o a scheda nascosta; meno particelle su dispositivi deboli; `prefers-reduced-motion` rispettato.
 
 ## API
 
